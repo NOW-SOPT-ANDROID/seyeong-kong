@@ -7,4 +7,10 @@
     <string name="login_et_password">비밀번호를 입력해주세요</string>
     <string name="login_btn">로그인 하기</string>
     <string name="login_tv_signup">회원가입</string>
+    <string name="signup_tv_signup">SIGN UP</string>
+    <string name="signup_btn">회원가입 하기</string>
+    <string name="signup_tv_nickname">닉네임</string>
+    <string name="signup_et_nickname">닉네임을 입력해주세요</string>
+    <string name="signup_tv_mbti">MBTI</string>
+    <string name="signup_et_mbti">MBTI를 입력해주세요</string>
 </resources>
