@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">NOW SOPT Android</string>
+    <string name="login_tv_sopt">Welcome to SOPT</string>
+    <string name="login_tv_id">ID</string>
+    <string name="login_et_id">아이디를 입력해주세요</string>
+    <string name="login_tv_password">비밀번호</string>
+    <string name="login_et_password">비밀번호를 입력해주세요</string>
+    <string name="login_btn">로그인 하기</string>
+    <string name="login_tv_signup">회원가입</string>
 </resources>
