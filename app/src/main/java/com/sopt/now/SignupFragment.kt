@@ -1,20 +1,32 @@
 package com.sopt.now
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.sopt.now.databinding.ActivitySignupBinding
+import com.sopt.now.databinding.FragmentSignupBinding
 
-class SignupActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignupBinding
+class SignupFragment : Fragment() {
+    private var _binding: FragmentSignupBinding ?= null
+    private val binding get() = _binding!!
+    private lateinit var userViewModel: UserViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSignupBinding.inflate(inflater, container, false)
+        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         clickSignupBtn()
     }
 
@@ -25,17 +37,12 @@ class SignupActivity : AppCompatActivity() {
             val nickname = binding.etNickname.text.toString()
             val mbti = binding.etMbti.text.toString()
 
-            if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(
-                    mbti
-                )
-            ) {
-                val intent = Intent(this, LoginActivity::class.java).apply {
-                    putExtra("id", id)
-                    putExtra("password", pw)
-                    putExtra("nickname", nickname)
-                }
-                setResult(Activity.RESULT_OK, intent)
-                finish()
+            if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(mbti)) {
+                userViewModel.userId.value = id
+                userViewModel.userPassword.value = pw
+                userViewModel.userNickname.value = nickname
+                userViewModel.userMbti.value = mbti
+                findNavController().navigate(R.id.action_signup_to_login)
             }
         }
     }
@@ -94,5 +101,10 @@ class SignupActivity : AppCompatActivity() {
             ).show()
             false
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
