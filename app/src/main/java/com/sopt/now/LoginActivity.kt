@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 Snackbar.make(
                     binding.root,
-                    "아이디나 비밀번호가 잘못되었습니다.",
+                    R.string.fail_login,
                     Snackbar.LENGTH_SHORT
                 ).show()
             }

@@ -25,7 +25,10 @@ class SignupActivity : AppCompatActivity() {
             val nickname = binding.etNickname.text.toString()
             val mbti = binding.etMbti.text.toString()
 
-            if (isValidId(id) && isValidPassword(pw) && isvalidNickname(nickname) && isvalidMbti(mbti)) {
+            if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(
+                    mbti
+                )
+            ) {
                 val intent = Intent(this, LoginActivity::class.java).apply {
                     putExtra("id", id)
                     putExtra("password", pw)
@@ -40,8 +43,8 @@ class SignupActivity : AppCompatActivity() {
     private fun isValidId(id: String): Boolean {
         val idLength = id.length
         val idMessage = when {
-            idLength < 6 -> "아이디는 6글자 이상이어야 합니다."
-            else -> "아이디는 10글자 이하여야 합니다."
+            idLength < 6 -> R.string.id_greater_than
+            else -> R.string.id_less_than
         }
 
         return if (idLength in 6..10) {
@@ -57,8 +60,8 @@ class SignupActivity : AppCompatActivity() {
     private fun isValidPassword(password: String): Boolean {
         val pwLength = password.length
         val pwMessage = when {
-            pwLength < 8 -> "비밀번호는 8글자 이상이어야 합니다."
-            else -> "비밀번호는 12글자 이하여야 합니다."
+            pwLength < 8 -> R.string.pw_greater_than
+            else -> R.string.pw_less_than
         }
 
         return if (pwLength in 8..12) {
@@ -71,23 +74,23 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    private fun isvalidNickname(nickname: String): Boolean {
+    private fun isValidNickname(nickname: String): Boolean {
         return if (nickname.isNotBlank()) {
             true
         } else {
             Snackbar.make(
-                binding.root, "닉네임을 입력해주세요.", Snackbar.LENGTH_SHORT
+                binding.root, R.string.signup_et_nickname, Snackbar.LENGTH_SHORT
             ).show()
             false
         }
     }
 
-    private fun isvalidMbti(mbti: String): Boolean {
+    private fun isValidMbti(mbti: String): Boolean {
         return if (mbti.isNotBlank() && mbti.length == 4) {
             true
         } else {
             Snackbar.make(
-                binding.root, "mbti를 입력해주세요.", Snackbar.LENGTH_SHORT
+                binding.root, R.string.signup_et_mbti, Snackbar.LENGTH_SHORT
             ).show()
             false
         }
