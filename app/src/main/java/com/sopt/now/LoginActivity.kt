@@ -16,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
     private var id: String = ""
     private var pw: String = ""
     private var nickname: String = ""
+    private var mbti: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
                     id = result.data?.getStringExtra("id") ?: ""
                     pw = result.data?.getStringExtra("password") ?: ""
                     nickname = result.data?.getStringExtra("nickname") ?: ""
+                    mbti = result.data?.getStringExtra("mbti") ?: ""
                     binding.etId.setText(id)
                     binding.etPassword.setText(pw)
                 }
@@ -56,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("id", id)
                 intent.putExtra("nickname", nickname)
+                intent.putExtra("mbti", mbti)
                 startActivity(intent)
             } else {
                 Snackbar.make(

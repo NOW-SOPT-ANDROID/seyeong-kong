@@ -14,8 +14,10 @@ class MainActivity : AppCompatActivity() {
 
         val id = intent.getStringExtra("id")
         val nickname = intent.getStringExtra("nickname")
+        val mbti = intent.getStringExtra("mbti")
 
         binding.tvId.text = id
         binding.tvNickname.text = nickname
+        binding.tvMbti.text = mbti
     }
 }

@@ -33,6 +33,7 @@ class SignupActivity : AppCompatActivity() {
                     putExtra("id", id)
                     putExtra("password", pw)
                     putExtra("nickname", nickname)
+                    putExtra("mbti", mbti)
                 }
                 setResult(Activity.RESULT_OK, intent)
                 finish()
