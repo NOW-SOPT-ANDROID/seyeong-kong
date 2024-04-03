@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">NOW SOPT Android</string>
+    <string name="signup">SIGN UP</string>
+    <string name="id">ID</string>
+    <string name="input_id">아이디를 입력해주세요</string>
+    <string name="pw">비밀번호</string>
+    <string name="input_pw">비밀번호를 입력해주세요</string>
+    <string name="nickname">닉네임</string>
+    <string name="input_nickname">닉네임을 입력해주세요</string>
+    <string name="mbti">MBTI</string>
+    <string name="input_mbti">mbti를 입력해주세요</string>
+    <string name="btn_signup">회원가입 하기</string>
+    <string name="login_sopt">Welome to SOPT</string>
+    <string name="login_to_signup">회원가입</string>
+    <string name="btn_login">로그인 하기</string>
+
+    <string name="alert_id">아이디는 6~10글자여야 합니다.</string>
+    <string name="alert_pw">비밀번호는 8~12글자여야 합니다.</string>
+    <string name="alert_nickname">닉네은는 1글자 이상이어야 합니다.</string>
+    <string name="alert_mbti">MBTI는 4글자여야 합니다.</string>
+    <string name="fail_login">아이디나 비밀번호가 맞지 않습니다.</string>
+    <string name="success_login">로그인 성공</string>
+
+    <string name="img">ProfileImg</string>
 </resources>
