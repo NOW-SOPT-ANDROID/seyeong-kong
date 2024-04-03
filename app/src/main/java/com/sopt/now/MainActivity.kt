@@ -2,6 +2,7 @@ package com.sopt.now
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,6 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Snackbar.make(
+            binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
+        ).show()
 
         val id = intent.getStringExtra("id")
         val nickname = intent.getStringExtra("nickname")
