@@ -1,76 +1,74 @@
 package com.sopt.now
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import com.sopt.now.databinding.FragmentLoginBinding
+import com.sopt.now.databinding.ActivityLoginBinding
 
-class LoginFragment : Fragment() {
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
+    private val viewModel: LoginViewModel by viewModels()
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
-    private lateinit var userViewModel: UserViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         goToSignup()
-        setIdPw()
+        setResultSignUp()
         loginBtn()
-
+        observeLoginResult()
     }
 
     private fun goToSignup() {
         binding.tvSignup.setOnClickListener {
-            findNavController().navigate(R.id.action_login_to_signup)
+            val intent = Intent(this, SignupActivity::class.java)
+            resultLauncher.launch(intent)
         }
     }
 
-    private fun setIdPw() {
-        userViewModel.userId.observe(viewLifecycleOwner) { id ->
-            binding.etId.setText(id)
-        }
-        userViewModel.userPassword.observe(viewLifecycleOwner) { password ->
-            binding.etPassword.setText(password)
-        }
-
+    private fun setResultSignUp() {
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val receivedId = result.data?.getStringExtra("id") ?: ""
+                    val receivedPw = result.data?.getStringExtra("password") ?: ""
+                    val receivedNickname = result.data?.getStringExtra("nickname") ?: ""
+                    val receivedMbti = result.data?.getStringExtra("mbti") ?: ""
+                    viewModel.setUserDetails(receivedId, receivedPw, receivedNickname, receivedMbti)
+                    binding.etId.setText(receivedId)
+                    binding.etPassword.setText(receivedPw)
+                }
+            }
     }
 
     private fun loginBtn() {
         binding.btnLogin.setOnClickListener {
             val inputId = binding.etId.text.toString()
             val inputPw = binding.etPassword.text.toString()
-
-            if (inputId == userViewModel.userId.value && inputPw == userViewModel.userPassword.value) {
-                findNavController().navigate(R.id.action_login_to_profile)
-            } else {
-                Snackbar.make(
-                    binding.root,
-                    R.string.fail_login,
-                    Snackbar.LENGTH_SHORT
-                ).show()
-
-            }
+            viewModel.login(inputId, inputPw)
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun observeLoginResult() {
+        viewModel.loginResult.observe(this) { isSuccess ->
+            if (isSuccess) {
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    putExtra("id", viewModel.id)
+                    putExtra("nickname", viewModel.nickname)
+                    putExtra("mbti", viewModel.mbti)
+                }
+                startActivity(intent)
+            } else {
+                Snackbar.make(binding.root, R.string.fail_login, Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 }
