@@ -17,11 +17,11 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        signupBtn()
+        initSignupClickListener()
         observeFormValidation()
     }
 
-    private fun signupBtn() {
+    private fun initSignupClickListener() {
         binding.btnSignup.setOnClickListener {
             viewModel.validateFormData(
                 binding.etId.text.toString(),

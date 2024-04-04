@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
 
         goToSignup()
         setResultSignUp()
-        loginBtn()
+        initLoginBtnClickListener()
         observeLoginResult()
     }
 
@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun loginBtn() {
+    private fun initLoginBtnClickListener() {
         binding.btnLogin.setOnClickListener {
             val inputId = binding.etId.text.toString()
             val inputPw = binding.etPassword.text.toString()

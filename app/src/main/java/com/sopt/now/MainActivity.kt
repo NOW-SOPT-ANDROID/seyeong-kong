@@ -13,10 +13,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        successMsg()
+        setInfo()
+    }
+
+    private fun successMsg() {
         Snackbar.make(
             binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
         ).show()
+    }
 
+    private fun setInfo() {
         val id = intent.getStringExtra("id")
         val nickname = intent.getStringExtra("nickname")
         val mbti = intent.getStringExtra("mbti")
