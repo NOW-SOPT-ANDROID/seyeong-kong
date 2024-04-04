@@ -1,5 +1,6 @@
 package com.sopt.now
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -24,5 +25,24 @@ class MainActivity : AppCompatActivity() {
         binding.tvId.text = id
         binding.tvNickname.text = nickname
         binding.tvMbti.text = mbti
+
+        clickLogout()
+    }
+
+    private fun clickLogout(){
+        binding.tvLogout.setOnClickListener {
+            logout()
+        }
+    }
+
+    private fun logout() {
+        val sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
