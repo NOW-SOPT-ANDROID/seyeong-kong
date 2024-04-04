@@ -9,40 +9,52 @@ import com.sopt.now.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Snackbar.make(
-            binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
-        ).show()
-
-        val id = intent.getStringExtra("id")
-        val nickname = intent.getStringExtra("nickname")
-        val mbti = intent.getStringExtra("mbti")
-
-        binding.tvId.text = id
-        binding.tvNickname.text = nickname
-        binding.tvMbti.text = mbti
-
+        successMsg()
+        setInfo()
         clickLogout()
     }
 
-    private fun clickLogout(){
+    private fun successMsg() {
+        Snackbar.make(
+            binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun setInfo() {
+        val user: User? = intent.getParcelableExtraProvider("user")
+        user?.let {
+            binding.tvId.text = it.id
+            binding.tvNickname.text = it.nickname
+            binding.tvMbti.text = it.mbti
+        }
+    }
+
+    private fun clickLogout() {
         binding.tvLogout.setOnClickListener {
             logout()
         }
     }
 
     private fun logout() {
-        val sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
+        clearData()
+        goToLogin()
+    }
 
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+    private fun clearData() {
+        getSharedPreferences("SaveLogin", MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
+    }
+
+    private fun goToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 }

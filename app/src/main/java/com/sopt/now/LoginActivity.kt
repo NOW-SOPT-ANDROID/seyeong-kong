@@ -2,6 +2,7 @@ package com.sopt.now
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -15,34 +16,37 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
+
         checkLogin()
         goToSignup()
         setResultSignUp()
-        loginBtn()
+        initLoginBtnClickListener()
         observeLoginResult()
     }
 
     private fun checkLogin() {
         val sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
         val userId = sharedPreferences.getString("UserID", null)
-        if (userId != null) {
-            val nickname = sharedPreferences.getString("Nickname", "")
-            val mbti = sharedPreferences.getString("Mbti", "")
-            goToMain(userId, nickname, mbti)
+        val password = sharedPreferences.getString("Password", "")
+        val nickname = sharedPreferences.getString("Nickname", "")
+        val mbti = sharedPreferences.getString("Mbti", "")
+
+        if (userId != null && password != null && nickname != null && mbti != null) {
+            goToMain(User(userId, password, nickname, mbti))
         }
     }
 
-    private fun goToMain(userId: String, nickname: String?, mbti: String?) {
+    private fun goToMain(user: User) {
         val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("id", userId)
-            putExtra("nickname", nickname)
-            putExtra("mbti", mbti)
+            putExtra("user", user)
         }
         startActivity(intent)
         finish()
@@ -59,21 +63,19 @@ class LoginActivity : AppCompatActivity() {
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    val receivedId = result.data?.getStringExtra("id") ?: ""
-                    val receivedPw = result.data?.getStringExtra("password") ?: ""
-                    val receivedNickname = result.data?.getStringExtra("nickname") ?: ""
-                    val receivedMbti = result.data?.getStringExtra("mbti") ?: ""
+                    val user: User? = result.data?.getParcelableExtraProvider("user") as? User
 
-                    viewModel.setUserDetails(receivedId, receivedPw, receivedNickname, receivedMbti)
-                    binding.etId.setText(receivedId)
-                    binding.etPassword.setText(receivedPw)
-
-                    saveLogin(receivedId, receivedPw, receivedNickname, receivedMbti)
+                    user?.let {
+                        viewModel.setUserDetails(it)
+                        binding.etId.setText(it.id)
+                        binding.etPassword.setText(it.password)
+                        saveLogin(it)
+                    }
                 }
             }
     }
 
-    private fun loginBtn() {
+    private fun initLoginBtnClickListener() {
         binding.btnLogin.setOnClickListener {
             val inputId = binding.etId.text.toString()
             val inputPw = binding.etPassword.text.toString()
@@ -85,9 +87,9 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginResult.observe(this) { isSuccess ->
             if (isSuccess) {
                 val intent = Intent(this, MainActivity::class.java).apply {
-                    putExtra("id", viewModel.id ?: "")
-                    putExtra("nickname", viewModel.nickname ?: "")
-                    putExtra("mbti", viewModel.mbti ?:"")
+                    viewModel.user?.let { user ->
+                        putExtra("user", user)
+                    }
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
                 startActivity(intent)
@@ -97,18 +99,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveLogin(
-        receivedId: String,
-        receivedPw: String,
-        receivedNickname: String,
-        receivedMbti: String
-    ) {
-        val sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("UserID", receivedId)
-        editor.putString("Password", receivedPw)
-        editor.putString("Nickname", receivedNickname)
-        editor.putString("Mbti", receivedMbti)
-        editor.apply()
+    private fun saveLogin(user: User) {
+        sharedPreferences.edit().apply {
+            putString("UserID", user.id)
+            putString("Password", user.password)
+            putString("Nickname", user.nickname)
+            putString("Mbti", user.mbti)
+            apply()
+        }
     }
 }

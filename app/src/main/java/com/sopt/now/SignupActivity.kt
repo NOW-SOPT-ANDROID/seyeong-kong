@@ -17,11 +17,11 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        signupBtn()
+        initSignupClickListener()
         observeFormValidation()
     }
 
-    private fun signupBtn() {
+    private fun initSignupClickListener() {
         binding.btnSignup.setOnClickListener {
             viewModel.validateFormData(
                 binding.etId.text.toString(),
@@ -38,11 +38,15 @@ class SignupActivity : AppCompatActivity() {
                 Snackbar.make(binding.root, getString(it), Snackbar.LENGTH_LONG).show()
             } ?: run {
                 if (formState.isValid) {
+                    val user = User(
+                        id = binding.etId.text.toString(),
+                        password = binding.etPassword.text.toString(),
+                        nickname = binding.etNickname.text.toString(),
+                        mbti = binding.etMbti.text.toString()
+                    )
+
                     val intent = Intent().apply {
-                        putExtra("id", binding.etId.text.toString())
-                        putExtra("password", binding.etPassword.text.toString())
-                        putExtra("nickname", binding.etNickname.text.toString())
-                        putExtra("mbti", binding.etMbti.text.toString())
+                        putExtra("user", user)
                     }
                     setResult(Activity.RESULT_OK, intent)
                     finish()
