@@ -17,9 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,20 +31,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val receivedId = intent.getStringExtra("id") ?: ""
-            val receivedNickname = intent.getStringExtra("nickname") ?: ""
-            val receivedMbti = intent.getStringExtra("mbti") ?: ""
-            MainScreen(receivedId, receivedNickname, receivedMbti)
+            val user = intent.getSerializableExtraProvider("user") as? User
+            MainScreen(user = user ?: User("", "", "", ""))
         }
     }
 }
 
 @Composable
-fun MainScreen(receivedId: String = "", receivedNickname: String = "", receivedMbti: String = "") {
-    val id by remember { mutableStateOf(receivedId) }
-    val nickname by remember { mutableStateOf(receivedNickname) }
-    val mbti by remember { mutableStateOf(receivedMbti) }
-
+fun MainScreen(user: User) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,20 +62,20 @@ fun MainScreen(receivedId: String = "", receivedNickname: String = "", receivedM
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = nickname ,
+                text = user.nickname,
                 fontSize = 30.sp
             )
 
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = mbti,
+                text = user.mbti,
                 fontSize = 20.sp
             )
         }
 
         Spacer(modifier = Modifier.width(5.dp))
         Text(
-            text = id,
+            text = user.id,
             fontSize = 20.sp
         )
     }
@@ -94,6 +85,6 @@ fun MainScreen(receivedId: String = "", receivedNickname: String = "", receivedM
 @Composable
 fun MainPreview() {
     NOWSOPTAndroidTheme {
-        MainScreen()
+        MainScreen(User("test", "test", "test", "test"))
     }
 }

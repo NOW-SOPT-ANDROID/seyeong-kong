@@ -2,9 +2,10 @@ package com.sopt.now.compose
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -19,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,97 +34,147 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.now.compose.ui.theme.NOWSOPTAndroidTheme
+import kotlinx.coroutines.launch
+
+enum class ButtonType {
+    LOGIN,
+    SIGNUP
+}
 
 class LoginActivity : ComponentActivity() {
+    private lateinit var signupActivityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var snackbarHostState: SnackbarHostState
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        signupActivityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val user = data?.getSerializableExtraProvider("user") as? User
+                if (user != null) {
+                    setContent {
+                        LoginScreen(user, onClicked = { buttonType ->
+                            when (buttonType) {
+                                ButtonType.LOGIN -> {
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.putExtra("user", user)
+                                    startActivity(intent)
+                                }
+
+                                ButtonType.SIGNUP -> {
+                                    //nothing
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+
         setContent {
-            val receivedId = intent.getStringExtra("id") ?: ""
-            val receivedPw = intent.getStringExtra("pw") ?: ""
-            val receivedNickname = intent.getStringExtra("nickname") ?: ""
-            val receivedMbti = intent.getStringExtra("mbti") ?: ""
-            LoginScreen(receivedId, receivedPw, receivedNickname, receivedMbti)
+            val coroutineScope = rememberCoroutineScope()
+            LoginScreen(null, onClicked = { buttonType ->
+                when (buttonType) {
+                    ButtonType.LOGIN -> {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(getString(R.string.fail_login))
+                        }
+                    }
+
+                    ButtonType.SIGNUP -> {
+                        val intent = Intent(this, SignupActivity::class.java)
+                        signupActivityResultLauncher.launch(intent)
+                    }
+                }
+            })
         }
     }
 }
 
 @Composable
-fun LoginScreen(receivedId: String = "", receivedPw: String = "", receivedNickname: String = "", receivedMbti: String = "") {
-    var id by remember { mutableStateOf(receivedId) }
-    var pw by remember { mutableStateOf(receivedPw) }
-    val nickname by remember { mutableStateOf(receivedNickname) }
-    val mbti by remember { mutableStateOf(receivedMbti) }
+fun LoginScreen(user: User?, onClicked: (ButtonType) -> Unit) {
+    var id by remember { mutableStateOf(user?.id ?: "") }
+    var pw by remember { mutableStateOf(user?.pw ?: "") }
+
+
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 30.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.login_sopt),
-            fontSize = 30.sp,
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .padding(top = 20.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 30.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.login_sopt),
+                fontSize = 30.sp,
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
 
-        Spacer(modifier = Modifier.height((30.dp)))
-        Text(
-            text = stringResource(R.string.id),
-            fontSize = 20.sp
-        )
+            Spacer(modifier = Modifier.height((30.dp)))
+            Text(
+                text = stringResource(R.string.id),
+                fontSize = 20.sp
+            )
 
-        TextField(
-            value = id,
-            onValueChange = { id = it },
-            label = { Text(stringResource(R.string.input_id)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
+            TextField(
+                value = id,
+                onValueChange = { id = it },
+                label = { Text(stringResource(R.string.input_id)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(modifier = Modifier.height((30.dp)))
-        Text(
-            text = stringResource(R.string.pw),
-            fontSize = 20.sp
-        )
+            Spacer(modifier = Modifier.height((30.dp)))
+            Text(
+                text = stringResource(R.string.pw),
+                fontSize = 20.sp
+            )
 
-        TextField(
-            value = pw,
-            onValueChange = { pw = it },
-            label = { Text(stringResource(R.string.input_pw)) },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
+            TextField(
+                value = pw,
+                onValueChange = { pw = it },
+                label = { Text(stringResource(R.string.input_pw)) },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        TextButton(onClick = {
-            val intent = Intent(context, SignupActivity::class.java)
-            context.startActivity(intent)
-        }) {
-            Text(stringResource(R.string.login_to_signup))
-        }
+            TextButton(onClick = { onClicked(ButtonType.SIGNUP) }) {
+                Text(stringResource(R.string.login_to_signup))
+            }
 
-        Spacer(modifier = Modifier.weight(1f))
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                if (id == receivedId && pw == receivedPw) {
-                    Toast.makeText(context, R.string.success_login, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        putExtra("id", id)
-                        putExtra("nickname", nickname)
-                        putExtra("mbti", mbti)
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    coroutineScope.launch {
+                        if (id == user?.id && pw == user.pw) {
+                            onClicked(ButtonType.LOGIN)
+                            snackbarHostState.showSnackbar(context.getString(R.string.success_login))
+                        } else {
+                            snackbarHostState.showSnackbar(context.getString(R.string.fail_login))
+                        }
                     }
-                    context.startActivity(intent)
-                } else {
-                    Toast.makeText(context, R.string.fail_login, Toast.LENGTH_SHORT).show()
-                }
-            }) {
-            Text(stringResource(R.string.btn_login))
+                }) {
+                Text(stringResource(R.string.btn_login))
+            }
+            Spacer(modifier = Modifier.height(30.dp))
         }
-        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 
@@ -127,6 +182,6 @@ fun LoginScreen(receivedId: String = "", receivedPw: String = "", receivedNickna
 @Composable
 fun LoginPreview() {
     NOWSOPTAndroidTheme {
-        LoginScreen()
+        LoginScreen(user = null, onClicked = {})
     }
 }
