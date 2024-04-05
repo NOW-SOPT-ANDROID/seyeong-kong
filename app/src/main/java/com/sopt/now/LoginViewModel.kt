@@ -9,7 +9,7 @@ class LoginViewModel : ViewModel() {
     val loginResult: LiveData<Boolean> = _loginResult
 
     var id: String? = null
-    var pw: String? = null
+    private var pw: String? = null
     var nickname: String? = null
     var mbti: String? = null
 
