@@ -2,7 +2,6 @@ package com.sopt.now
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -16,31 +15,26 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
+        sharedPreferencesManager = SharedPreferencesManager(this)
 
         checkLogin()
-        goToSignup()
+        initSignUpClickListener()
         setResultSignUp()
         initLoginBtnClickListener()
         observeLoginResult()
     }
 
     private fun checkLogin() {
-        val sharedPreferences = getSharedPreferences("SaveLogin", MODE_PRIVATE)
-        val userId = sharedPreferences.getString("UserID", null)
-        val password = sharedPreferences.getString("Password", "")
-        val nickname = sharedPreferences.getString("Nickname", "")
-        val mbti = sharedPreferences.getString("Mbti", "")
-
-        if (userId != null && password != null && nickname != null && mbti != null) {
-            goToMain(User(userId, password, nickname, mbti))
+        val user = sharedPreferencesManager.getUserDetails()
+        user?.let {
+            goToMain(it)
         }
     }
 
@@ -52,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun goToSignup() {
+    private fun initSignUpClickListener() {
         binding.tvSignup.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
@@ -100,12 +94,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun saveLogin(user: User) {
-        sharedPreferences.edit().apply {
-            putString("UserID", user.id)
-            putString("Password", user.password)
-            putString("Nickname", user.nickname)
-            putString("Mbti", user.mbti)
-            apply()
-        }
+        sharedPreferencesManager.saveUserDetails(user)
     }
 }
