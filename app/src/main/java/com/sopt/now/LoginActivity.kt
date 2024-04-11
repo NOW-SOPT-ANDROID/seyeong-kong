@@ -23,12 +23,12 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goToSignup()
+        initSignupClickListener()
         setResultSignUp()
-        loginBtn()
+        initLoginBtnClickListener()
     }
 
-    private fun goToSignup() {
+    private fun initSignupClickListener() {
         binding.tvSignup.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setResultSignUp() {
         resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result : ActivityResult ->
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     id = result.data?.getStringExtra("id") ?: ""
                     pw = result.data?.getStringExtra("password") ?: ""
@@ -49,12 +49,12 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun loginBtn() {
+    private fun initLoginBtnClickListener() {
         binding.btnLogin.setOnClickListener {
             val inputId = binding.etId.text.toString()
             val inputPw = binding.etPassword.text.toString()
 
-            if (inputId == id && inputPw == pw) {
+            if (inputId == id && inputPw == pw && inputId.isNotBlank() && inputPw.isNotBlank()) {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("id", id)
                 intent.putExtra("nickname", nickname)

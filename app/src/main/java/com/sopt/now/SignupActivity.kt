@@ -10,15 +10,23 @@ import com.sopt.now.databinding.ActivitySignupBinding
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
 
+    companion object {
+        private const val MIN_ID_LENGTH = 6
+        private const val MAX_ID_LENGTH = 10
+        private const val MIN_PW_LENGTH = 8
+        private const val MAX_PW_LENGTH = 12
+        private const val MBTI_LENGTH = 4
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        clickSignupBtn()
+        initSignupBtnClickListener()
     }
 
-    private fun clickSignupBtn() {
+    private fun initSignupBtnClickListener() {
         binding.btnSignup.setOnClickListener {
             val id = binding.etId.text.toString()
             val pw = binding.etPassword.text.toString()
@@ -44,11 +52,11 @@ class SignupActivity : AppCompatActivity() {
     private fun isValidId(id: String): Boolean {
         val idLength = id.length
         val idMessage = when {
-            idLength < 6 -> R.string.id_greater_than
+            idLength < MIN_ID_LENGTH -> R.string.id_greater_than
             else -> R.string.id_less_than
         }
 
-        return if (idLength in 6..10) {
+        return if (idLength in MIN_ID_LENGTH..MAX_ID_LENGTH) {
             true
         } else {
             Snackbar.make(
@@ -61,11 +69,11 @@ class SignupActivity : AppCompatActivity() {
     private fun isValidPassword(password: String): Boolean {
         val pwLength = password.length
         val pwMessage = when {
-            pwLength < 8 -> R.string.pw_greater_than
+            pwLength < MIN_PW_LENGTH -> R.string.pw_greater_than
             else -> R.string.pw_less_than
         }
 
-        return if (pwLength in 8..12) {
+        return if (pwLength in MIN_PW_LENGTH..MAX_PW_LENGTH) {
             true
         } else {
             Snackbar.make(
@@ -87,7 +95,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun isValidMbti(mbti: String): Boolean {
-        return if (mbti.isNotBlank() && mbti.length == 4) {
+        return if (mbti.isNotBlank() && mbti.length == MBTI_LENGTH) {
             true
         } else {
             Snackbar.make(
