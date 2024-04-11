@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -36,74 +37,81 @@ import androidx.compose.ui.unit.sp
 import com.sopt.now.compose.ui.theme.NOWSOPTAndroidTheme
 import kotlinx.coroutines.launch
 
-enum class ButtonType {
-    LOGIN,
-    SIGNUP
-}
 
 class LoginActivity : ComponentActivity() {
     private lateinit var signupActivityResultLauncher: ActivityResultLauncher<Intent>
+    private var user: User? = null
     private lateinit var snackbarHostState: SnackbarHostState
 
+    enum class ScreenState {
+        LOGIN,
+        MAIN
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        snackbarHostState = SnackbarHostState()
+        setupActivityResultLauncher()
+        setContent {
+            Content(user)
+        }
+    }
 
+    private fun setupActivityResultLauncher() {
         signupActivityResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
                 val data = result.data
-                val user = data?.getSerializableExtraProvider("user") as? User
-                if (user != null) {
-                    setContent {
-                        LoginScreen(user, onClicked = { buttonType ->
-                            when (buttonType) {
-                                ButtonType.LOGIN -> {
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    intent.putExtra("user", user)
-                                    startActivity(intent)
-                                }
-
-                                ButtonType.SIGNUP -> {
-                                    //nothing
-                                }
-                            }
-                        })
-                    }
+                user = data?.getSerializableExtraProvider("user") as? User
+                setContent {
+                    Content(user)
                 }
             }
         }
+    }
 
-        setContent {
-            val coroutineScope = rememberCoroutineScope()
-            LoginScreen(null, onClicked = { buttonType ->
-                when (buttonType) {
-                    ButtonType.LOGIN -> {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(getString(R.string.fail_login))
-                        }
-                    }
+    @Composable
+    fun Content(user: User?) {
+        val screenState = remember { mutableStateOf(ScreenState.LOGIN) }
 
-                    ButtonType.SIGNUP -> {
-                        val intent = Intent(this, SignupActivity::class.java)
-                        signupActivityResultLauncher.launch(intent)
-                    }
+        when (screenState.value) {
+            ScreenState.LOGIN -> LoginScreen(
+                user = user,
+                onLoginSuccess = {
+                    screenState.value = ScreenState.MAIN
+                },
+                onSignupClicked = {
+                    val signupIntent = Intent(this@LoginActivity, SignupActivity::class.java)
+                    signupActivityResultLauncher.launch(signupIntent)
                 }
-            })
+            )
+
+            ScreenState.MAIN -> {
+                navigateToMainScreen()
+            }
         }
+    }
+
+    private fun navigateToMainScreen() {
+        val intent = Intent(this, MainActivity::class.java).apply { putExtra("user", user) }
+        startActivity(intent)
+        finish()
     }
 }
 
 @Composable
-fun LoginScreen(user: User?, onClicked: (ButtonType) -> Unit) {
+fun LoginScreen(
+    user: User?,
+    onLoginSuccess: (User) -> Unit,
+    onSignupClicked: () -> Unit
+) {
     var id by remember { mutableStateOf(user?.id ?: "") }
     var pw by remember { mutableStateOf(user?.pw ?: "") }
 
-
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         snackbarHost = {
@@ -154,7 +162,7 @@ fun LoginScreen(user: User?, onClicked: (ButtonType) -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            TextButton(onClick = { onClicked(ButtonType.SIGNUP) }) {
+            TextButton(onClick = onSignupClicked) {
                 Text(stringResource(R.string.login_to_signup))
             }
 
@@ -162,15 +170,18 @@ fun LoginScreen(user: User?, onClicked: (ButtonType) -> Unit) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    coroutineScope.launch {
-                        if (id == user?.id && pw == user.pw) {
-                            onClicked(ButtonType.LOGIN)
-                            snackbarHostState.showSnackbar(context.getString(R.string.success_login))
-                        } else {
-                            snackbarHostState.showSnackbar(context.getString(R.string.fail_login))
+                    if (id == user?.id && pw == user.pw) {
+                        onLoginSuccess(user)
+                    } else {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = context.getString(R.string.fail_login),
+                                duration = SnackbarDuration.Short
+                            )
                         }
                     }
-                }) {
+                }
+            ) {
                 Text(stringResource(R.string.btn_login))
             }
             Spacer(modifier = Modifier.height(30.dp))
@@ -182,6 +193,6 @@ fun LoginScreen(user: User?, onClicked: (ButtonType) -> Unit) {
 @Composable
 fun LoginPreview() {
     NOWSOPTAndroidTheme {
-        LoginScreen(user = null, onClicked = {})
+        LoginScreen(user = null, onLoginSuccess = { _ -> }, onSignupClicked = {})
     }
 }

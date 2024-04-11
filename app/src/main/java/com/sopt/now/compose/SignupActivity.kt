@@ -1,11 +1,11 @@
 package com.sopt.now.compose
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +19,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,27 +36,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.now.compose.ui.theme.NOWSOPTAndroidTheme
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class SignupActivity : ComponentActivity() {
-    companion object {
-        const val MIN_ID_LENGTH = 6
-        const val MAX_ID_LENGTH = 10
-        const val MIN_PW_LENGTH = 8
-        const val MAX_PW_LENGTH = 12
-        const val MBTI_LENGTH = 4
-    }
-
+    private val signupViewModel by viewModels<SignupViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SignupScreen()
+            SignupScreen(signupViewModel)
         }
     }
 
     @Composable
-    fun SignupScreen() {
+    fun SignupScreen(viewModel: SignupViewModel) {
         var id by remember { mutableStateOf("") }
         var pw by remember { mutableStateOf("") }
         var nickname by remember { mutableStateOf("") }
@@ -63,6 +57,7 @@ class SignupActivity : ComponentActivity() {
         val context = LocalContext.current
         val snackbarHostState = remember { SnackbarHostState() }
         val coroutineScope = rememberCoroutineScope()
+        val formState by viewModel.isFormValid.observeAsState()
 
         Scaffold(
             snackbarHost = {
@@ -150,18 +145,7 @@ class SignupActivity : ComponentActivity() {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        if (validateInput(
-                                context,
-                                id,
-                                pw,
-                                nickname,
-                                mbti,
-                                snackbarHostState,
-                                coroutineScope
-                            )
-                        ) {
-                            goToLogin(id, pw, nickname, mbti)
-                        }
+                        viewModel.validateFormData(id, pw, nickname, mbti)
                     }) {
                     Text(stringResource(R.string.btn_signup))
                 }
@@ -169,119 +153,21 @@ class SignupActivity : ComponentActivity() {
 
             }
         }
-    }
 
-    private fun showSnackbar(
-        snackbarHostState: SnackbarHostState,
-        message: String,
-        coroutineScope: CoroutineScope
-    ) {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(message)
-        }
-    }
-
-    private fun validateInput(
-        context: Context,
-        id: String,
-        pw: String,
-        nickname: String,
-        mbti: String,
-        snackbarHostState: SnackbarHostState,
-        coroutineScope: CoroutineScope
-    ): Boolean {
-        return validateId(context, id, snackbarHostState, coroutineScope) &&
-                validatePw(context, pw, snackbarHostState, coroutineScope) &&
-                validateNickname(context, nickname, snackbarHostState, coroutineScope) &&
-                validateMbti(context, mbti, snackbarHostState, coroutineScope)
-    }
-
-    private fun validateId(
-        context: Context,
-        id: String,
-        snackbarHostState: SnackbarHostState,
-        coroutineScope: CoroutineScope
-    ): Boolean {
-        return when {
-            id.length < MIN_ID_LENGTH -> {
-                showSnackbar(
-                    snackbarHostState,
-                    context.resources.getString(R.string.id_greater_than),
-                    coroutineScope
-                )
-                false
+        LaunchedEffect(formState) {
+            formState?.let {
+                if (!it.isValid) {
+                    it.errorMsg?.let { msgResId ->
+                        val message = context.getString(msgResId)
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(message)
+                        }
+                    }
+                } else {
+                    goToLogin(id, pw, nickname, mbti)
+                }
             }
-
-            id.length > MAX_ID_LENGTH -> {
-                showSnackbar(
-                    snackbarHostState,
-                    context.resources.getString(R.string.id_less_than),
-                    coroutineScope
-                )
-                false
-            }
-
-            else -> true
         }
-    }
-
-    private fun validatePw(
-        context: Context,
-        pw: String,
-        snackbarHostState: SnackbarHostState,
-        coroutineScope: CoroutineScope
-    ): Boolean {
-        return when {
-            pw.length < MIN_PW_LENGTH -> {
-                showSnackbar(
-                    snackbarHostState,
-                    context.getString(R.string.pw_greater_than),
-                    coroutineScope
-                )
-                false
-            }
-
-            pw.length > MAX_PW_LENGTH -> {
-                showSnackbar(
-                    snackbarHostState,
-                    context.getString(R.string.pw_less_than),
-                    coroutineScope
-                )
-                false
-            }
-
-            else -> true
-        }
-    }
-
-    private fun validateNickname(
-        context: Context,
-        nickname: String,
-        snackbarHostState: SnackbarHostState,
-        coroutineScope: CoroutineScope
-    ): Boolean {
-        if (nickname.isBlank()) {
-            showSnackbar(
-                snackbarHostState,
-                context.getString(R.string.input_nickname),
-                coroutineScope
-            )
-            return false
-        }
-        return true
-    }
-
-    private fun validateMbti(
-        context: Context,
-        mbti: String,
-        snackbarHostState: SnackbarHostState,
-        coroutineScope: CoroutineScope
-    ): Boolean {
-        if (mbti.length != MBTI_LENGTH || mbti.isBlank()) {
-            showSnackbar(snackbarHostState, context.getString(R.string.input_mbti), coroutineScope)
-            return false
-        }
-        return true
     }
 
     private fun goToLogin(id: String, pw: String, nickname: String, mbti: String) {
@@ -297,7 +183,7 @@ class SignupActivity : ComponentActivity() {
     @Composable
     fun SignupPreview() {
         NOWSOPTAndroidTheme {
-            SignupScreen()
+            //  SignupScreen()
         }
     }
 }

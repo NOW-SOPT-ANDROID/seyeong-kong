@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val user = intent.getSerializableExtraProvider("user") as? User
-            MainScreen(user = user ?: User("", "", "", ""))
+            val user = intent.getSerializableExtraProvider("user") as? User ?: User()
+            MainScreen(user = user)
         }
     }
 }
@@ -85,6 +85,6 @@ fun MainScreen(user: User) {
 @Composable
 fun MainPreview() {
     NOWSOPTAndroidTheme {
-        MainScreen(User("test", "test", "test", "test"))
+        MainScreen(User())
     }
 }
