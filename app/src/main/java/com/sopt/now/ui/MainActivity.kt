@@ -1,22 +1,25 @@
-package com.sopt.now
+package com.sopt.now.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.sopt.now.R
+import com.sopt.now.User
+import com.sopt.now.UserRepository
 import com.sopt.now.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferencesManager = SharedPreferencesManager(this)
+        userRepository = UserRepository(applicationContext)
 
         successMsg()
         setInfo()
@@ -30,11 +33,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setInfo() {
-        val user: User? = intent.getParcelableExtraProvider("user")
-        user?.let {
-            binding.tvId.text = it.id
-            binding.tvNickname.text = it.nickname
-            binding.tvMbti.text = it.mbti
+        val user: User? = userRepository.getUserDetails()
+        if (user != null) {
+            binding.tvId.text = user.id
+            binding.tvNickname.text = user.nickname
+            binding.tvMbti.text = user.mbti
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 
@@ -45,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        sharedPreferencesManager.clearUserDetails()
+        userRepository.clearUserDetails()
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }

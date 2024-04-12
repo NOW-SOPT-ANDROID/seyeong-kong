@@ -1,12 +1,17 @@
-package com.sopt.now
+package com.sopt.now.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sopt.now.R
+import com.sopt.now.User
 
 class SignupViewModel : ViewModel() {
     private val _formState = MutableLiveData<FormState>()
     val isFormValid: LiveData<FormState> = _formState
+
+    private val _userCreated = MutableLiveData<User?>()
+    val userCreated: LiveData<User?> = _userCreated
 
     companion object {
         private const val MIN_ID_LENGTH = 6
@@ -25,9 +30,13 @@ class SignupViewModel : ViewModel() {
         val errors = listOfNotNull(idError, passwordError, nicknameError, mbtiError)
 
         if (errors.isEmpty()) {
-            _formState.value = FormState(isValid = true)
+            val newUser = User(id, password, nickname, mbti)
+            _userCreated.value = newUser
+            _formState.value = _formState.value?.copy(isValid = true) ?: FormState(isValid = true)
         } else {
-            _formState.value = FormState(errorMsg = errors.first())
+            _formState.value = _formState.value?.copy(errorMsg = errors.first()) ?: FormState(
+                errorMsg = errors.first()
+            )
         }
     }
 
@@ -52,9 +61,9 @@ class SignupViewModel : ViewModel() {
             null
 
     private fun validateMbti(mbti: String): Int? =
-        if (mbti.isBlank() || mbti.length != MBTI_LENGTH)
+        if (mbti.isBlank() || mbti.length != MBTI_LENGTH) {
             R.string.invalid_mbti
-        else
+        } else
             null
 
     data class FormState(val isValid: Boolean = false, val errorMsg: Int? = null)
