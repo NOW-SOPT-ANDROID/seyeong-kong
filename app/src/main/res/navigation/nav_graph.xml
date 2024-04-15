@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/graph"
-    app:startDestination="@id/mypageFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -12,8 +12,8 @@
             android:id="@+id/action_login_to_signup"
             app:destination="@id/signupFragment" />
         <action
-            android:id="@+id/action_login_to_mypage"
-            app:destination="@id/mypageFragment" />
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <fragment
@@ -33,5 +33,15 @@
             android:id="@+id/action_mypage_to_login"
             app:destination="@id/loginFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.sopt.now.ui.HomeFragment"
+        android:label="HomeFragment" />
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.sopt.now.ui.SearchFragment"
+        android:label="SearchFragment" />
 
 </navigation>
