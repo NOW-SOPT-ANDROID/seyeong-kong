@@ -7,11 +7,19 @@ class UserRepository(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
 
+    fun setUserLoggedIn(loggedIn: Boolean) {
+        sharedPreferences.edit().putBoolean("isLoggedIn", loggedIn).apply()
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return sharedPreferences.getBoolean("isLoggedIn", false)
+    }
+
     fun getUserDetails(): User? {
         val userId = sharedPreferences.getString(KEY_USER_ID, null) ?: return null
-        val password = sharedPreferences.getString(KEY_USER_PW, "")
-        val nickname = sharedPreferences.getString(KEY_NICKNAME, "")
-        val mbti = sharedPreferences.getString(KEY_MBTI, "")
+        val password = sharedPreferences.getString(KEY_USER_PW, null) ?: return null
+        val nickname = sharedPreferences.getString(KEY_NICKNAME, null) ?: return null
+        val mbti = sharedPreferences.getString(KEY_MBTI, null) ?: return null
         return User(userId, password, nickname, mbti)
     }
 

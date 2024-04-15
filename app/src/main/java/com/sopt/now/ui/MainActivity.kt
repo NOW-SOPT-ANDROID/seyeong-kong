@@ -1,58 +1,32 @@
 package com.sopt.now.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.sopt.now.R
-import com.sopt.now.User
 import com.sopt.now.UserRepository
 import com.sopt.now.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var userRepository: UserRepository
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        userRepository = UserRepository(this)
 
-        userRepository = UserRepository(applicationContext)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.main_fcv) as NavHostFragment
+        navController = navHostFragment.navController
 
-        successMsg()
-        setInfo()
-        clickLogout()
-    }
-
-    private fun successMsg() {
-        Snackbar.make(
-            binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
-        ).show()
-    }
-
-    private fun setInfo() {
-        val user: User? = userRepository.getUserDetails()
-        if (user != null) {
-            binding.tvId.text = user.id
-            binding.tvNickname.text = user.nickname
-            binding.tvMbti.text = user.mbti
+        if (userRepository.isUserLoggedIn()) {
+            navController.navigate(R.id.mypageFragment)
         } else {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            navController.navigate(R.id.loginFragment)
         }
-    }
-
-    private fun clickLogout() {
-        binding.tvLogout.setOnClickListener {
-            logout()
-        }
-    }
-
-    private fun logout() {
-        userRepository.clearUserDetails()
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
     }
 }
