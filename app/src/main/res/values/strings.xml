@@ -24,4 +24,8 @@
     <string name="login_tv_logout">로그아웃</string>
     <string name="already_signup">이미 회원가입을 하셨습니다.</string>
     <string name="not_signup">회원가입을 먼저 해주세요.</string>
+
+    <string name="bnv_home">홈</string>
+    <string name="bnv_search">검색</string>
+    <string name="bnv_mypage">마이페이지</string>
 </resources>
