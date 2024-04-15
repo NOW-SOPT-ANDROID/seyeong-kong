@@ -15,9 +15,10 @@ import com.sopt.now.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var userRepository: UserRepository
+    private val binding: FragmentLoginBinding
+        get() = requireNotNull(_binding) { "FragmentLoginBinding is not initialized" }
 
+    private lateinit var userRepository: UserRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,7 +74,7 @@ class LoginFragment : Fragment() {
 
             if (inputId == user?.id && inputPw == user.password) {
                 userRepository.setUserLoggedIn(true)
-                findNavController().navigate(R.id.action_login_to_mypage)
+                findNavController().navigate(R.id.action_login_to_home)
             } else {
                 Snackbar.make(
                     binding.root,

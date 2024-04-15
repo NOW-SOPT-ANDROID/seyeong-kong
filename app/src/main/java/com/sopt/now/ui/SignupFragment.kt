@@ -14,7 +14,8 @@ import com.sopt.now.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentSignupBinding
+        get() = requireNotNull(_binding) { "FragmentSignupBinding is not initialized" }
     private lateinit var userRepository: UserRepository
     private val viewModel: SignupViewModel by viewModels {
         SignupViewModelFactory(requireActivity().application)
@@ -25,7 +26,6 @@ class SignupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentSignupBinding.inflate(inflater, container, false)
         return binding.root
     }

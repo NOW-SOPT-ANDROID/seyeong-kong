@@ -13,7 +13,8 @@ import com.sopt.now.databinding.FragmentMypageBinding
 
 class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentMypageBinding
+        get() = requireNotNull(_binding) { "FragmentMypageBinding is not initialized" }
     private lateinit var userRepository: UserRepository
 
 
