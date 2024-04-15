@@ -1,9 +1,11 @@
 package com.sopt.now.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.sopt.now.R
 import com.sopt.now.UserRepository
 import com.sopt.now.databinding.ActivityMainBinding
@@ -11,7 +13,6 @@ import com.sopt.now.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var userRepository: UserRepository
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +22,25 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.main_fcv) as NavHostFragment
-        navController = navHostFragment.navController
+        val navController = navHostFragment.navController
+        binding.mainBnv.setupWithNavController(navController)
+
+        hideBottomNavigationView(navController)
 
         if (userRepository.isUserLoggedIn()) {
-            navController.navigate(R.id.mypageFragment)
+            navController.navigate(R.id.homeFragment)
         } else {
             navController.navigate(R.id.loginFragment)
+        }
+    }
+
+    private fun hideBottomNavigationView(navController: NavController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.mainBnv.visibility = when (destination.id) {
+                R.id.loginFragment -> View.GONE
+                R.id.signupFragment -> View.GONE
+                else -> View.VISIBLE
+            }
         }
     }
 }
