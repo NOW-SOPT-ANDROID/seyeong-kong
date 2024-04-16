@@ -32,8 +32,13 @@ class HomeFragment : Fragment() {
 
         binding.rvFriend.adapter = ConcatAdapter(profileAdapter, friendAdapter)
 
-        friendAdapter.setFriendList(viewModel.mockFriendList)
-        profileAdapter.setProfileList(viewModel.mockProfileList)
+        viewModel.mockFriendList.observe(viewLifecycleOwner) { friendList ->
+            friendAdapter.submitList(friendList)
+        }
+
+        viewModel.mockProfileList.observe(viewLifecycleOwner) { profileList ->
+            profileAdapter.submitList(profileList)
+        }
     }
 
     override fun onDestroyView() {
