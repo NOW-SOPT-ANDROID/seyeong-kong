@@ -2,23 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.sopt.now.ui.LoginFragment"
+        android:name="com.sopt.now.ui.login.LoginFragment"
         android:label="LoginFragment">
         <action
             android:id="@+id/action_login_to_signup"
             app:destination="@id/signupFragment" />
         <action
             android:id="@+id/action_login_to_home"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.sopt.now.ui.SignupFragment"
+        android:name="com.sopt.now.ui.signup.SignupFragment"
         android:label="SignupFragment">
         <action
             android:id="@+id/action_signup_to_login"
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/mypageFragment"
-        android:name="com.sopt.now.ui.MypageFragment"
+        android:name="com.sopt.now.ui.mypage.MypageFragment"
         android:label="MypageFragment">
         <action
             android:id="@+id/action_mypage_to_login"
@@ -36,12 +36,12 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.sopt.now.ui.HomeFragment"
+        android:name="com.sopt.now.ui.home.HomeFragment"
         android:label="HomeFragment" />
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.sopt.now.ui.SearchFragment"
+        android:name="com.sopt.now.ui.search.SearchFragment"
         android:label="SearchFragment" />
 
 </navigation>
