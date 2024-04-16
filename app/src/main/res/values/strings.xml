@@ -28,4 +28,6 @@
     <string name="bnv_home">홈</string>
     <string name="bnv_search">검색</string>
     <string name="bnv_mypage">마이페이지</string>
+    <string name="home_name">이름</string>
+    <string name="home_description">소개</string>
 </resources>
