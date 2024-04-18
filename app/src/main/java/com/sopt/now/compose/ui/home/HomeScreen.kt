@@ -1,5 +1,7 @@
 package com.sopt.now.compose.ui.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -21,13 +24,42 @@ import com.sopt.now.compose.data.Profile
 import com.sopt.now.compose.data.friendList
 import com.sopt.now.compose.data.userProfile
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
+    val evenFriends = friendList.filterIndexed { index, _ -> index % 2 == 0 }
+    val oddFriends = friendList.filterIndexed { index, _ -> index % 2 != 0 }
+
     LazyColumn {
         item {
             UserProfileItem(userProfile)
         }
-        items(friendList) { friend ->
+
+        stickyHeader {
+            Text(
+                text = "Even Friends",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+                    .padding(5.dp),
+                color = Color.Black
+            )
+        }
+        items(items = evenFriends) { friend ->
+            FriendProfileItem(friend)
+        }
+
+        stickyHeader {
+            Text(
+                text = "Odd Friends",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+                    .padding(5.dp),
+                color = Color.Black
+            )
+        }
+        items(items = oddFriends) { friend ->
             FriendProfileItem(friend)
         }
     }
