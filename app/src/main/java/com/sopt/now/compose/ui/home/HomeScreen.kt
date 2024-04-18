@@ -27,26 +27,11 @@ import com.sopt.now.compose.data.userProfile
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
-    val evenFriends = friendList.filterIndexed { index, _ -> index % 2 == 0 }
-    val oddFriends = friendList.filterIndexed { index, _ -> index % 2 != 0 }
+    val (oddFriends, evenFriends) = friendList.partition { it.name.toInt() % 2 != 0 }
 
     LazyColumn {
         item {
             UserProfileItem(userProfile)
-        }
-
-        stickyHeader {
-            Text(
-                text = "Even Friends",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray)
-                    .padding(5.dp),
-                color = Color.Black
-            )
-        }
-        items(items = evenFriends) { friend ->
-            FriendProfileItem(friend)
         }
 
         stickyHeader {
@@ -60,6 +45,20 @@ fun HomeScreen() {
             )
         }
         items(items = oddFriends) { friend ->
+            FriendProfileItem(friend)
+        }
+
+        stickyHeader {
+            Text(
+                text = "Even Friends",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+                    .padding(5.dp),
+                color = Color.Black
+            )
+        }
+        items(items = evenFriends) { friend ->
             FriendProfileItem(friend)
         }
     }
