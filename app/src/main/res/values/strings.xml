@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">NOW SOPT Android</string>
+    <string name="login_tv_sopt">Welcome to SOPT</string>
+    <string name="login_tv_id">ID</string>
+    <string name="login_et_id">아이디를 입력해주세요</string>
+    <string name="login_tv_password">비밀번호</string>
+    <string name="login_et_password">비밀번호를 입력해주세요</string>
+    <string name="login_btn">로그인 하기</string>
+    <string name="login_tv_signup">회원가입</string>
+    <string name="signup_tv_signup">SIGN UP</string>
+    <string name="signup_btn">회원가입 하기</string>
+    <string name="signup_tv_nickname">닉네임</string>
+    <string name="signup_et_nickname">닉네임을 입력해주세요</string>
+    <string name="signup_tv_mbti">MBTI</string>
+    <string name="signup_et_mbti">MBTI를 4글자로 입력해주세요</string>
+
+    <string name="id_greater_than">"아이디는 6글자 이상이어야 합니다."</string>
+    <string name="id_less_than">"아이디는 10글자 이하여야 합니다."</string>
+    <string name="pw_greater_than">"비밀번호는 8글자 이상이어야 합니다."</string>
+    <string name="pw_less_than">"비밀번호는 12글자 이하이어야 합니다."</string>
+    <string name="fail_login">아이디나 비밀번호가 잘못되었습니다.</string>
+    <string name="success_login">로그인 성공</string>
 </resources>
