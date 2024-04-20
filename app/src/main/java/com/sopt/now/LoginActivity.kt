@@ -6,17 +6,15 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
+    private val viewModel: LoginViewModel by viewModels()
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private var id: String = ""
-    private var pw: String = ""
-    private var nickname: String = ""
-    private var mbti: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
         initSignupClickListener()
         setResultSignUp()
         initLoginBtnClickListener()
+        observeLoginResult()
     }
 
     private fun initSignupClickListener() {
@@ -39,12 +38,13 @@ class LoginActivity : AppCompatActivity() {
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    id = result.data?.getStringExtra("id") ?: ""
-                    pw = result.data?.getStringExtra("password") ?: ""
-                    nickname = result.data?.getStringExtra("nickname") ?: ""
-                    mbti = result.data?.getStringExtra("mbti") ?: ""
-                    binding.etId.setText(id)
-                    binding.etPassword.setText(pw)
+                    val receivedId = result.data?.getStringExtra("id") ?: ""
+                    val receivedPw = result.data?.getStringExtra("password") ?: ""
+                    val receivedNickname = result.data?.getStringExtra("nickname") ?: ""
+                    val receivedMbti = result.data?.getStringExtra("mbti") ?: ""
+                    viewModel.setUserDetails(receivedId, receivedPw, receivedNickname, receivedMbti)
+                    binding.etId.setText(receivedId)
+                    binding.etPassword.setText(receivedPw)
                 }
             }
     }
@@ -53,19 +53,22 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val inputId = binding.etId.text.toString()
             val inputPw = binding.etPassword.text.toString()
+            viewModel.login(inputId, inputPw)
+        }
+    }
 
-            if (inputId == id && inputPw == pw && inputId.isNotBlank() && inputPw.isNotBlank()) {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("id", id)
-                intent.putExtra("nickname", nickname)
-                intent.putExtra("mbti", mbti)
+    private fun observeLoginResult() {
+        viewModel.loginResult.observe(this) { isSuccess ->
+            if (isSuccess) {
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    putExtra("id", viewModel.id)
+                    putExtra("nickname", viewModel.nickname)
+                    putExtra("mbti", viewModel.mbti)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
                 startActivity(intent)
             } else {
-                Snackbar.make(
-                    binding.root,
-                    R.string.fail_login,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                Snackbar.make(binding.root, R.string.fail_login, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
