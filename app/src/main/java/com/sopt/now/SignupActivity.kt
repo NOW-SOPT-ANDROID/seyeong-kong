@@ -22,6 +22,10 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun initSignupClickListener() {
+        initSignupBtnClickListener()
+    }
+
+    private fun initSignupBtnClickListener() {
         binding.btnSignup.setOnClickListener {
             viewModel.validateFormData(
                 binding.etId.text.toString(),

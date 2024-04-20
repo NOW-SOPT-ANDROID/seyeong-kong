@@ -12,7 +12,7 @@
     <string name="signup_tv_nickname">닉네임</string>
     <string name="signup_et_nickname">닉네임을 입력해주세요</string>
     <string name="signup_tv_mbti">MBTI</string>
-    <string name="signup_et_mbti">MBTI를 입력해주세요</string>
+    <string name="signup_et_mbti">MBTI를 4글자로 입력해주세요</string>
 
     <string name="id_greater_than">"아이디는 6글자 이상이어야 합니다."</string>
     <string name="id_less_than">"아이디는 10글자 이하여야 합니다."</string>

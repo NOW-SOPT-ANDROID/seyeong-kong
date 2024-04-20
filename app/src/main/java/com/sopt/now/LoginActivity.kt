@@ -21,13 +21,13 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goToSignup()
+        initSignupClickListener()
         setResultSignUp()
         initLoginBtnClickListener()
         observeLoginResult()
     }
 
-    private fun goToSignup() {
+    private fun initSignupClickListener() {
         binding.tvSignup.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)

@@ -24,6 +24,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setInfo() {
+        Snackbar.make(
+            binding.root, R.string.success_login, Snackbar.LENGTH_SHORT
+        ).show()
+
         val id = intent.getStringExtra("id")
         val nickname = intent.getStringExtra("nickname")
         val mbti = intent.getStringExtra("mbti")
