@@ -37,6 +37,7 @@
         android:maxLines="2"
         android:text="@string/home_description"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_name"
         app:layout_constraintTop_toTopOf="@id/tv_name" />

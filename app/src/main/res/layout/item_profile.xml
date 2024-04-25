@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
@@ -31,17 +31,17 @@
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="0dp"
-        android:gravity="end"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:ellipsize="end"
+        android:gravity="end"
         android:maxLines="2"
         android:text="@string/home_description"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_name"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/tv_name" />
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
