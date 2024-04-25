@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".data.Sopt"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,24 +14,14 @@
         android:theme="@style/Theme.NOWSOPTAndroid"
         tools:targetApi="31">
         <activity
-            android:name=".ui.LoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustUnspecified|stateVisible">
+            android:name=".ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.SignupActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateVisible" />
-
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="false" />
     </application>
 
 </manifest>
