@@ -1,18 +1,13 @@
 package com.sopt.now.ui.signup
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.sopt.now.R
 import com.sopt.now.data.User
 import com.sopt.now.data.UserRepository
 
-class SignupViewModel(application: Application) : AndroidViewModel(application) {
-    private val userRepository = UserRepository(application)
-
+class SignupViewModel: ViewModel() {
     private val _signupResult = MutableLiveData<Boolean>()
     val signupResult: LiveData<Boolean> = _signupResult
 
@@ -22,8 +17,10 @@ class SignupViewModel(application: Application) : AndroidViewModel(application) 
     fun isValidFormData(id: String, pw: String, nickname: String, mbti: String) {
         if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(mbti)) {
             val user = User(id, pw, nickname, mbti)
-            userRepository.saveUserData(user)
+            UserRepository.saveUserData(user)
             _signupResult.value = true
+        } else {
+            _signupResult.value = false
         }
     }
 
@@ -71,15 +68,5 @@ class SignupViewModel(application: Application) : AndroidViewModel(application) 
         private const val MIN_PW_LENGTH = 8
         private const val MAX_PW_LENGTH = 12
         private const val MBTI_LENGTH = 4
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-class SignupViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SignupViewModel::class.java)) {
-            return SignupViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
