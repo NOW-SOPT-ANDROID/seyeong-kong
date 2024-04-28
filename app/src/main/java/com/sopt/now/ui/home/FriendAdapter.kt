@@ -8,6 +8,7 @@ import com.sopt.now.data.Friend
 import com.sopt.now.databinding.ItemFriendBinding
 
 class FriendAdapter : ListAdapter<Friend, FriendViewHolder>(FriendDiff()) {
+    var onItemLongClick: ((Friend) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -16,7 +17,7 @@ class FriendAdapter : ListAdapter<Friend, FriendViewHolder>(FriendDiff()) {
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        holder.onBind(getItem(position))
+        holder.onBind(getItem(position), onItemLongClick)
     }
 
     class FriendDiff: DiffUtil.ItemCallback<Friend>() {
