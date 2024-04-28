@@ -3,13 +3,9 @@ package com.sopt.now.data
 import android.content.Context
 import android.content.SharedPreferences
 
-object UserRepository {
-    private const val KEY_USER_ID = "UserID"
-    private const val KEY_USER_PW = "Password"
-    private const val KEY_NICKNAME = "Nickname"
-    private const val KEY_MBTI = "Mbti"
-
-    private lateinit var sharedPreferences: SharedPreferences
+class UserRepository(context: Context){
+    private var sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("save_login", Context.MODE_PRIVATE)
 
     fun init(context: Context) {
         sharedPreferences =
@@ -40,5 +36,12 @@ object UserRepository {
 
     fun clearUserData() {
         sharedPreferences.edit().clear().apply()
+    }
+
+    companion object{
+        private const val KEY_USER_ID = "UserID"
+        private const val KEY_USER_PW = "Password"
+        private const val KEY_NICKNAME = "Nickname"
+        private const val KEY_MBTI = "Mbti"
     }
 }
