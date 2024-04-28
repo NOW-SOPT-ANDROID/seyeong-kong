@@ -22,7 +22,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
         setupAdapters()
         initFab()
     }
+
     private fun setupAdapters() {
         val friendAdapter = FriendAdapter()
         friendAdapter.onItemLongClick = { friend ->
@@ -93,7 +94,6 @@ class HomeFragment : Fragment() {
             .setNegativeButton("취소", null)
             .show()
     }
-
 
     fun scrollToTop() {
         binding.rvFriend.scrollToPosition(0)

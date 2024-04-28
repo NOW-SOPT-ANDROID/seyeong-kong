@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.UserRepository
+import com.sopt.now.data.Sopt
 import com.sopt.now.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -37,7 +37,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setUserInfo() {
-        val user = UserRepository.getUserData()
+        val user = Sopt.userRepository.getUserData()
         user?.let {
             binding.etId.setText(it.id)
             binding.etPassword.setText(it.password)
