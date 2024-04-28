@@ -2,12 +2,12 @@ package com.sopt.now.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.sopt.now.data.Friend
 import com.sopt.now.databinding.ItemFriendBinding
 
-class FriendAdapter() : RecyclerView.Adapter<FriendViewHolder>() {
-    private var friendList: List<Friend> = emptyList()
+class FriendAdapter : ListAdapter<Friend, FriendViewHolder>(FriendDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -16,13 +16,16 @@ class FriendAdapter() : RecyclerView.Adapter<FriendViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        holder.onBind(friendList[position])
+        holder.onBind(getItem(position))
     }
 
-    override fun getItemCount() = friendList.size
+    class FriendDiff: DiffUtil.ItemCallback<Friend>() {
+        override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
+            return oldItem.name == newItem.name
+        }
 
-    fun setFriendList(friendList: List<Friend>) {
-        this.friendList = friendList.toList()
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
+            return oldItem == newItem
+        }
     }
 }

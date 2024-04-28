@@ -20,6 +20,8 @@
         android:id="@+id/main_bnv"
         android:layout_width="0dp"
         android:layout_height="80dp"
+        app:itemIconTint="@drawable/bg_bnv_selector"
+        app:itemTextColor="@drawable/bg_bnv_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
