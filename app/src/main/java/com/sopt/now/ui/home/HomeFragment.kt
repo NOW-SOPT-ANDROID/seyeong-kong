@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
             .setTitle("친구 삭제")
             .setMessage("${friend.name}을(를) 삭제하시겠습니까?")
             .setPositiveButton("삭제") { _, _ ->
-                viewModel.removeFriend(friend)
+                viewModel.deleteFriend(friend)
             }
             .setNegativeButton("취소", null)
             .show()
