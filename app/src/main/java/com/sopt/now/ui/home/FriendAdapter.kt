@@ -20,9 +20,9 @@ class FriendAdapter : ListAdapter<Friend, FriendViewHolder>(FriendDiff()) {
         holder.onBind(getItem(position), onItemLongClick)
     }
 
-    class FriendDiff: DiffUtil.ItemCallback<Friend>() {
+    class FriendDiff : DiffUtil.ItemCallback<Friend>() {
         override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-            return oldItem.name == newItem.name
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
