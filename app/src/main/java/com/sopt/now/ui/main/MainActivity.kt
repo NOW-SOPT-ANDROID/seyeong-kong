@@ -38,8 +38,7 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNavigationView(navController: NavController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.mainBnv.visibility = when (destination.id) {
-                R.id.loginFragment -> View.GONE
-                R.id.signupFragment -> View.GONE
+                R.id.loginFragment, R.id.signupFragment-> View.GONE
                 else -> View.VISIBLE
             }
         }

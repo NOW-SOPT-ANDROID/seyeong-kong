@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
     }
 
     fun scrollToTop() {
-        binding.rvFriend.scrollToPosition(0)
+        binding.rvFriend.smoothScrollToPosition(0)
     }
 
     override fun onDestroyView() {
