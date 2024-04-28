@@ -11,7 +11,6 @@ object UserRepository {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-
     fun init(context: Context) {
         sharedPreferences =
             context.applicationContext.getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
@@ -19,10 +18,6 @@ object UserRepository {
 
     fun setUserLoggedIn(loggedIn: Boolean) {
         sharedPreferences.edit().putBoolean("isLoggedIn", loggedIn).apply()
-    }
-
-    fun isUserLoggedIn(): Boolean {
-        return sharedPreferences.getBoolean("isLoggedIn", false)
     }
 
     fun getUserData(): User? {
