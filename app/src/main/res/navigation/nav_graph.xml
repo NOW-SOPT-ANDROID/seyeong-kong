@@ -13,7 +13,9 @@
             app:destination="@id/signupFragment" />
         <action
             android:id="@+id/action_login_to_home"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

@@ -9,22 +9,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.UserRepository
 import com.sopt.now.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding: FragmentSignupBinding
         get() = requireNotNull(_binding) { "FragmentSignupBinding is not initialized" }
-    private lateinit var userRepository: UserRepository
-    private val viewModel: SignupViewModel by viewModels {
-        SignupViewModelFactory(requireActivity().application)
-    }
+    private val viewModel: SignupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSignupBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,19 +28,20 @@ class SignupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userRepository = UserRepository(requireContext())
         initSignupBtnClickListener()
         observeViewModel()
     }
 
     private fun initSignupBtnClickListener() {
         binding.btnSignup.setOnClickListener {
-            val id = binding.etId.text.toString()
-            val pw = binding.etPassword.text.toString()
-            val nickname = binding.etNickname.text.toString()
-            val mbti = binding.etMbti.text.toString()
+            with(binding) {
+                val id = etId.text.toString()
+                val pw = etPassword.text.toString()
+                val nickname = etNickname.text.toString()
+                val mbti = etMbti.text.toString()
 
-            viewModel.isValidFormData(id, pw, nickname, mbti)
+                viewModel.isValidFormData(id, pw, nickname, mbti)
+            }
         }
     }
 

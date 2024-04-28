@@ -6,31 +6,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.UserRepository
 import com.sopt.now.databinding.ActivityMainBinding
 import com.sopt.now.ui.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var userRepository: UserRepository
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userRepository = UserRepository(this)
         setNavigation()
-        handleUserLogin()
         setScrollToTop()
     }
 
     private fun setNavigation() {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.main_fcv) as NavHostFragment
-        navController = navHostFragment.navController
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_fcv) as? NavHostFragment
+        if (navHostFragment != null) {
+            val navController = navHostFragment.navController
+            setupNavigation(navController)
+        } else {
+            Snackbar.make(binding.root, "NavigationError", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupNavigation(navController: NavController) {
         binding.mainBnv.setupWithNavController(navController)
         hideBottomNavigationView(navController)
     }
@@ -41,14 +45,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.loginFragment, R.id.signupFragment-> View.GONE
                 else -> View.VISIBLE
             }
-        }
-    }
-
-    private fun handleUserLogin() {
-        if (userRepository.isUserLoggedIn()) {
-            navController.navigate(R.id.homeFragment)
-        } else {
-            navController.navigate(R.id.loginFragment)
         }
     }
 

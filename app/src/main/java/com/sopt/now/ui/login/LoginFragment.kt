@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.User
 import com.sopt.now.data.UserRepository
 import com.sopt.now.databinding.FragmentLoginBinding
 
@@ -17,8 +16,7 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding
         get() = requireNotNull(_binding) { "FragmentLoginBinding is not initialized" }
-
-    private lateinit var userRepository: UserRepository
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,72 +24,47 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        userRepository = UserRepository(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user = userRepository.getUserData()
-        if (user != null) {
-            setData(user)
-            initLoginBtnClickListener(user)
-            initSignupAlertClickListener()
-        } else {
-            initSignupNavClickListener()
-            initLoginBtnAlertClickListener()
+        setUserInfo()
+        setupObservers()
+        initLoginBtn()
+        initSignupNavigation()
+    }
+
+    private fun setUserInfo() {
+        val user = UserRepository.getUserData()
+        user?.let {
+            binding.etId.setText(it.id)
+            binding.etPassword.setText(it.password)
         }
     }
 
-    private fun setData(user: User) {
-        binding.etId.setText(user.id)
-        binding.etPassword.setText(user.password)
-    }
-
-    private fun initLoginBtnClickListener(user: User?) {
-        binding.btnLogin.setOnClickListener {
-            val inputId = binding.etId.text.toString()
-            val inputPw = binding.etPassword.text.toString()
-
-            if (inputId == user?.id && inputPw == user.password) {
-                userRepository.setUserLoggedIn(true)
-                findNavController().navigate(R.id.action_login_to_home, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.graph, true)
-                    .build())
+    private fun setupObservers() {
+        viewModel.loginSuccess.observe(viewLifecycleOwner) { success ->
+            if(success) {
+                findNavController().navigate(R.id.action_login_to_home)
             } else {
-                Snackbar.make(
-                    binding.root,
-                    R.string.fail_login,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                Snackbar.make(binding.root, R.string.fail_login, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun initSignupAlertClickListener() {
-        binding.tvSignup.setOnClickListener {
-            Snackbar.make(
-                binding.root,
-                R.string.already_signup,
-                Snackbar.LENGTH_SHORT
-            ).show()
+    private fun initLoginBtn() {
+        binding.btnLogin.setOnClickListener {
+            val id = binding.etId.text.toString()
+            val pw = binding.etPassword.text.toString()
+            viewModel.login(id, pw)
         }
     }
 
-    private fun initSignupNavClickListener() {
+    private fun initSignupNavigation() {
         binding.tvSignup.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_signup)
-        }
-    }
-
-    private fun initLoginBtnAlertClickListener() {
-        binding.btnLogin.setOnClickListener {
-            Snackbar.make(
-                binding.root,
-                R.string.not_signup,
-                Snackbar.LENGTH_SHORT
-            ).show()
         }
     }
 
