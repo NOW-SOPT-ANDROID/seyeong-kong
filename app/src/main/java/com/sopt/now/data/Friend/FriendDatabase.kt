@@ -1,4 +1,4 @@
-package com.sopt.now.data
+package com.sopt.now.data.Friend
 
 import android.content.Context
 import androidx.room.Database
