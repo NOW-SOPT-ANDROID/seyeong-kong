@@ -13,7 +13,7 @@ class MypageViewModel: ViewModel() {
     }
 
     fun logout() {
-        Sopt.userRepository.clearUserData()
+        Sopt.userRepository.logoutUser()
         userLiveData.value = null
     }
 }
