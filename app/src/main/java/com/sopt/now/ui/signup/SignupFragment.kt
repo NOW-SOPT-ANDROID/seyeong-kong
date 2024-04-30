@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
+import com.sopt.now.network.RequestSignUpDto
 import com.sopt.now.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
@@ -34,26 +35,31 @@ class SignupFragment : Fragment() {
 
     private fun initSignupBtnClickListener() {
         binding.btnSignup.setOnClickListener {
-            with(binding) {
-                val id = etId.text.toString()
-                val pw = etPassword.text.toString()
-                val nickname = etNickname.text.toString()
-                val mbti = etMbti.text.toString()
-
-                viewModel.isValidFormData(id, pw, nickname, mbti)
-            }
+            viewModel.signUp(getSignUpRequestDto())
         }
     }
 
-    private fun observeViewModel() {
-        viewModel.signupResult.observe(viewLifecycleOwner) { result ->
-            if (result) {
-                findNavController().navigate(R.id.action_signup_to_login)
-            }
-        }
+    private fun getSignUpRequestDto(): RequestSignUpDto {
+        val id = binding.etId.text.toString()
+        val password = binding.etPassword.text.toString()
+        val nickname = binding.etNickname.text.toString()
+        val phoneNumber = binding.etPhone.text.toString()
+        return RequestSignUpDto(
+            authenticationId = id,
+            password = password,
+            nickname = nickname,
+            phone = phoneNumber
+        )
+    }
 
-        viewModel.errorMsg.observe(viewLifecycleOwner) { errorMsg ->
-            Snackbar.make(binding.root, errorMsg, Snackbar.LENGTH_SHORT).show()
+    private fun observeViewModel() {
+        viewModel.liveData.observe(viewLifecycleOwner) { signUpState ->
+            if (signUpState.isSuccess) {
+                Snackbar.make(binding.root, signUpState.message, Snackbar.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_signup_to_login)
+            } else {
+                Snackbar.make(binding.root, signUpState.message, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
