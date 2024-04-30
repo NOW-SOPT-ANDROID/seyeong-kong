@@ -1,72 +1,57 @@
 package com.sopt.now.ui.signup
 
-import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.R
 import com.sopt.now.data.Sopt
 import com.sopt.now.data.User
+import com.sopt.now.network.RequestSignUpDto
+import com.sopt.now.network.ResponseDto
+import com.sopt.now.network.ServicePool
+import com.sopt.now.ui.AuthState
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SignupViewModel: ViewModel() {
-    private val _signupResult = MutableLiveData<Boolean>()
-    val signupResult: LiveData<Boolean> = _signupResult
+    private val authService by lazy { ServicePool.authService }
+    val liveData = MutableLiveData<AuthState>()
 
-    private val _errorMsg = MutableLiveData<Int>()
-    val errorMsg: LiveData<Int> = _errorMsg
+    fun signUp(request: RequestSignUpDto) {
+        authService.signUp(request).enqueue(object : Callback<ResponseDto> {
+            override fun onResponse(
+                call: Call<ResponseDto>,
+                response: Response<ResponseDto>,
+            ) {
+                if (response.isSuccessful) {
+                    val data: ResponseDto? = response.body()
+                    val userId = response.headers()["location"]
+                    val user = User(request.authenticationId, request.password, request.nickname, request.phone)
+                    Sopt.userRepository.saveUserData(user)
+                    liveData.value = AuthState(
+                        isSuccess = true,
+                        message = "회원가입 성공 유저의 ID는 $userId 입니다."
+                    )
+                    Log.d("SignUp", "data: $data, userId: $userId")
+                } else {
+                    val statusCode = response.code()
+                    val rawJson = response.errorBody()?.string() ?: "No error message provided"
+                    val error = JSONObject(rawJson).optString("message", "error message")
+                    liveData.value = AuthState(
+                        isSuccess = false,
+                        message = "회원가입 실패 $error"
+                    )
+                    Log.d("SignupViewModel", "회원가입 실패: HTTP Status Code: $statusCode, Error: $error")
+                }
+            }
 
-    fun isValidFormData(id: String, pw: String, nickname: String, mbti: String) {
-        if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(mbti)) {
-            val user = User(id, pw, nickname, mbti)
-            Sopt.userRepository.saveUserData(user)
-            _signupResult.value = true
-        } else {
-            _signupResult.value = false
-        }
-    }
-
-    private fun isValidId(id: String): Boolean {
-        val idLength = id.length
-        return if (idLength in MIN_ID_LENGTH..MAX_ID_LENGTH) {
-            true
-        } else {
-            _errorMsg.value = R.string.id_greater_than
-            false
-        }
-    }
-
-    private fun isValidPassword(password: String): Boolean {
-        val pwLength = password.length
-        return if (pwLength in MIN_PW_LENGTH..MAX_PW_LENGTH) {
-            true
-        } else {
-            _errorMsg.value = R.string.pw_greater_than
-            false
-        }
-    }
-
-    private fun isValidNickname(nickname: String): Boolean {
-        return if (nickname.isNotBlank()) {
-            true
-        } else {
-            _errorMsg.value = R.string.signup_et_nickname
-            false
-        }
-    }
-
-    private fun isValidMbti(mbti: String): Boolean {
-        return if (mbti.isNotBlank() && mbti.length == MBTI_LENGTH) {
-            true
-        } else {
-            _errorMsg.value = R.string.signup_et_mbti
-            false
-        }
-    }
-
-    companion object {
-        private const val MIN_ID_LENGTH = 6
-        private const val MAX_ID_LENGTH = 10
-        private const val MIN_PW_LENGTH = 8
-        private const val MAX_PW_LENGTH = 12
-        private const val MBTI_LENGTH = 4
+            override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
+                liveData.value = AuthState(
+                    isSuccess = false,
+                    message = "서버 에러"
+                )
+            }
+        })
     }
 }
