@@ -36,8 +36,8 @@ class MypageFragment : Fragment() {
         viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.tvId.text = it.id
-                binding.tvMbti.text = it.mbti
                 binding.tvNickname.text = it.nickname
+                binding.tvPhone.text = it.phone
             }
         }
     }
