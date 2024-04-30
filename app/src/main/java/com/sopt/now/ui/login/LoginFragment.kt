@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
 import com.sopt.now.data.Sopt
 import com.sopt.now.databinding.FragmentLoginBinding
+import com.sopt.now.network.RequestLoginDto
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -31,7 +32,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUserInfo()
-        setupObservers()
+        observeViewModel()
         initLoginBtn()
         initSignupNavigation()
     }
@@ -44,12 +45,12 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun setupObservers() {
-        viewModel.loginSuccess.observe(viewLifecycleOwner) { success ->
-            if(success) {
+    private fun observeViewModel() {
+        viewModel.liveData.observe(viewLifecycleOwner) { authState ->
+            if(authState.isSuccess) {
                 findNavController().navigate(R.id.action_login_to_home)
             } else {
-                Snackbar.make(binding.root, R.string.fail_login, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, authState.message, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -58,7 +59,7 @@ class LoginFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             val id = binding.etId.text.toString()
             val pw = binding.etPassword.text.toString()
-            viewModel.login(id, pw)
+            viewModel.login(RequestLoginDto(authenticationId = id, password = pw))
         }
     }
 
