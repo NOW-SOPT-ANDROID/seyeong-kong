@@ -1,4 +1,4 @@
-package com.sopt.now.data.signup
+package com.sopt.now.network
 
 import retrofit2.Call
 import retrofit2.http.Body
@@ -8,5 +8,10 @@ interface AuthService {
     @POST("member/join")
     fun signUp(
         @Body request: RequestSignUpDto,
-    ): Call<ResponseSignUpDto>
+    ): Call<ResponseDto>
+
+    @POST("member/login")
+    fun login(
+        @Body request: RequestLoginDto,
+    ): Call<ResponseDto>
 }

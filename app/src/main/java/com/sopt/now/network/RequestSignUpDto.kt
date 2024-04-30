@@ -1,4 +1,4 @@
-package com.sopt.now.data.signup
+package com.sopt.now.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
