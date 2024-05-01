@@ -30,4 +30,6 @@
     <string name="home_description">소개</string>
     <string name="fab_add">친구 추가 버튼</string>
     <string name="follower">팔로워</string>
+    <string name="follower_name_format">%1$s %2$s</string>
+
 </resources>
