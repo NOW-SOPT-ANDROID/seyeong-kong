@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_mypage_to_chPassword"
             app:destination="@id/chPasswordFragment" />
+        <action
+            android:id="@+id/action_mypage_to_follower"
+            app:destination="@id/followerFragment" />
     </fragment>
 
     <fragment
@@ -56,5 +59,10 @@
             android:id="@+id/action_chPassword_to_login"
             app:destination="@id/loginFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/followerFragment"
+        android:name="com.sopt.now.ui.follower.FollowerFragment"
+        android:label="FollowerFragment" />
 
 </navigation>
