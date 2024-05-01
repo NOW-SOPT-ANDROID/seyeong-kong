@@ -31,6 +31,7 @@ class MypageFragment : Fragment() {
         setupObservers()
         initLogoutBtnClickListener()
         initChPasswordBtnClickListener()
+        initFollowerClickListener()
     }
 
     private fun setupObservers() {
@@ -53,6 +54,12 @@ class MypageFragment : Fragment() {
     private fun initChPasswordBtnClickListener() {
         binding.tvChPassword.setOnClickListener {
             findNavController().navigate(R.id.action_mypage_to_chPassword)
+        }
+    }
+
+    private fun initFollowerClickListener() {
+        binding.tvFollower.setOnClickListener {
+            findNavController().navigate(R.id.action_mypage_to_follower)
         }
     }
 
