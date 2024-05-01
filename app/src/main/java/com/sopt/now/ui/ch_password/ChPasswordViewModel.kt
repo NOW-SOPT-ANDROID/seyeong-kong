@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.data.Sopt
-import com.sopt.now.network.RequestChPwDto
-import com.sopt.now.network.ResponseDto
-import com.sopt.now.network.ServicePool
+import com.sopt.now.network.request.RequestChPwDto
+import com.sopt.now.network.response.ResponseDto
+import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
 import org.json.JSONObject
 import retrofit2.Call

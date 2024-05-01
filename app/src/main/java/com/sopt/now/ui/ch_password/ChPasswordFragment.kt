@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
 import com.sopt.now.databinding.FragmentChPasswordBinding
-import com.sopt.now.network.RequestChPwDto
+import com.sopt.now.network.request.RequestChPwDto
 
 class ChPasswordFragment : Fragment() {
     private var _binding: FragmentChPasswordBinding? = null
