@@ -32,17 +32,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
     val userData = userRepository.getUserData()
@@ -110,8 +108,8 @@ fun LoginScreen(navController: NavController) {
             CustomBtn(
                 text = stringResource(R.string.btn_login),
                 onClick = {
-                    if (userRepository.isValidateUser(inputId, inputPw)) {
-                        userRepository.setUserLoggedIn(true)
+                    if (viewModel.loginUser(inputId, inputPw)) {
+                        viewModel.setUserLoggedIn(true)
                         navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
                         }
@@ -161,12 +159,4 @@ fun CustomBtn(
             color = MaterialTheme.colorScheme.onPrimary
         )
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewLoginScreen() {
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
 }

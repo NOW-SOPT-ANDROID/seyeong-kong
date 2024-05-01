@@ -38,8 +38,7 @@ import com.sopt.now.compose.R
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun SignupScreen(navController: NavController) {
-    val viewModel: SignupViewModel = viewModel()
+fun SignupScreen(navController: NavController, viewModel: SignupViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     var userId by remember { mutableStateOf("") }

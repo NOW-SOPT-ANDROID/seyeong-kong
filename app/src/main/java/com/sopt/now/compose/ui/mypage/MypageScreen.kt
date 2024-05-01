@@ -12,7 +12,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,14 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
+import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 
 @Composable
-fun MypageScreen(navController: NavController) {
-    val context = LocalContext.current
-    val userRepository = UserRepository(context)
-    val user = userRepository.getUserData()
-
+fun MypageScreen(navController: NavController, userRepository: UserRepository, user: User?) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { padding ->
