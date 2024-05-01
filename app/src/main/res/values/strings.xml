@@ -9,10 +9,10 @@
     <string name="input_nickname">닉네임을 입력해주세요</string>
     <string name="mbti">MBTI</string>
     <string name="input_mbti">mbti를 입력해주세요</string>
-    <string name="btn_signup">회원가입 하기</string>
     <string name="login_sopt">Welome to SOPT</string>
-    <string name="login_to_signup">회원가입</string>
-    <string name="btn_login">로그인 하기</string>
+    <string name="signup_kr">회원가입</string>
+    <string name="btn_login">로그인</string>
+    <string name="btn_logout">로그아웃</string>
 
     <string name="id_greater_than">"아이디는 6글자 이상이어야 합니다."</string>
     <string name="id_less_than">"아이디는 10글자 이하여야 합니다."</string>
@@ -23,4 +23,5 @@
     <string name="success_login">로그인 성공</string>
 
     <string name="img">ProfileImg</string>
+    <string name="search">Search</string>
 </resources>
