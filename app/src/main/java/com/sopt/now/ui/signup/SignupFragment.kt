@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.network.RequestSignUpDto
+import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {

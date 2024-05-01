@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
 import com.sopt.now.data.Sopt
 import com.sopt.now.databinding.FragmentLoginBinding
-import com.sopt.now.network.RequestLoginDto
+import com.sopt.now.network.request.RequestLoginDto
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
