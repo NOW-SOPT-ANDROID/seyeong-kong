@@ -14,6 +14,14 @@
     <string name="signup_tv_phone">핸드폰 번호</string>
     <string name="signup_et_phone">010-****-****</string>
     <string name="login_tv_logout">로그아웃</string>
+    <string name="login_tv_ch_password">비밀번호 변경</string>
+
+    <string name="ch_password_btn">비밀번호 변경하기</string>
+    <string name="ch_password_tv_pre">기존 비밀번호</string>
+    <string name="ch_password_et_pre">기존 비밀번호를 입력하세요.</string>
+    <string name="ch_password_tv_new">새로운 비밀번호</string>
+    <string name="ch_password_et_new">새로운 비밀번호를 입력하세요.</string>
+    <string name="ch_password_et_verify">새로운 비밀번호를 확인하세요.</string>
 
     <string name="bnv_home">홈</string>
     <string name="bnv_search">검색</string>
