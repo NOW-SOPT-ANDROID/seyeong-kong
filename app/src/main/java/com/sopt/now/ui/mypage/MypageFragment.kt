@@ -30,6 +30,7 @@ class MypageFragment : Fragment() {
 
         setupObservers()
         initLogoutBtnClickListener()
+        initChPasswordBtnClickListener()
     }
 
     private fun setupObservers() {
@@ -46,6 +47,12 @@ class MypageFragment : Fragment() {
         binding.tvLogout.setOnClickListener {
             viewModel.logout()
             findNavController().navigate(R.id.action_mypage_to_login)
+        }
+    }
+
+    private fun initChPasswordBtnClickListener() {
+        binding.tvChPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_mypage_to_chPassword)
         }
     }
 
