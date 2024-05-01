@@ -26,14 +26,14 @@ class SignupViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     val data: ResponseDto? = response.body()
-                    val userId = response.headers()["location"]
+                    val memberId = response.headers()["location"]?: "unknown"
                     val user = User(request.authenticationId, request.password, request.nickname, request.phone)
                     Sopt.userRepository.saveUserData(user)
                     liveData.value = AuthState(
                         isSuccess = true,
-                        message = "회원가입 성공 유저의 ID는 $userId 입니다."
+                        message = "회원가입 성공 유저의 ID는 $memberId 입니다."
                     )
-                    Log.d("SignUp", "data: $data, userId: $userId")
+                    Log.d("SignUp", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
