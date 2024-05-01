@@ -49,7 +49,10 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNavigationView(navController: NavController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.mainBnv.visibility = when (destination.id) {
-                R.id.loginFragment, R.id.signupFragment, R.id.chPasswordFragment-> View.GONE
+                R.id.loginFragment -> View.GONE
+                R.id.signupFragment -> View.GONE
+                R.id.chPasswordFragment -> View.GONE
+                R.id.followerFragment -> View.GONE
                 else -> View.VISIBLE
             }
         }
@@ -57,7 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setScrollToTop() {
         binding.mainBnv.setOnItemReselectedListener { item ->
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fcv) as NavHostFragment
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.main_fcv) as NavHostFragment
             val currentFragment = navHostFragment.childFragmentManager.fragments.first()
             when (item.itemId) {
                 R.id.homeFragment -> (currentFragment as? HomeFragment)?.scrollToTop()
