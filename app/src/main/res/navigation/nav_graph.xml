@@ -51,6 +51,7 @@
         android:id="@+id/searchFragment"
         android:name="com.sopt.now.ui.search.SearchFragment"
         android:label="SearchFragment" />
+
     <fragment
         android:id="@+id/chPasswordFragment"
         android:name="com.sopt.now.ui.ch_password.ChPasswordFragment"
