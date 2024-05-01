@@ -33,6 +33,10 @@ class UserRepository(private val preferences: SharedPreferences) {
         }
     }
 
+    fun updateUserPassword(newPassword: String) {
+        preferences.edit().putString(KEY_USER_PW, newPassword).apply()
+    }
+
     fun clearUserData() {
         preferences.edit().clear().apply()
     }
@@ -40,7 +44,7 @@ class UserRepository(private val preferences: SharedPreferences) {
     companion object {
         private const val KEY_USER_ID = "UserID"
         private const val KEY_USER_PW = "Password"
-        private const val KEY_NICKNAME = "Nickname"
+        private const val  KEY_NICKNAME = "Nickname"
         private const val KEY_PHONE = "Phone"
     }
 }
