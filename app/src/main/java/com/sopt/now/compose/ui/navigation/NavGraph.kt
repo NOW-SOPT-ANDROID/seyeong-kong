@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
+import com.sopt.now.compose.ui.follower.FollowerViewModel
 import com.sopt.now.compose.ui.login.LoginViewModel
 import com.sopt.now.compose.ui.signup.SignupViewModel
 
@@ -15,7 +16,8 @@ fun NavGraph(
     userRepository: UserRepository,
     signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel,
-    chPasswordViewModel: ChPasswordViewModel
+    chPasswordViewModel: ChPasswordViewModel,
+    followerViewmodel: FollowerViewModel,
 ) {
     val startDestination = if (userRepository.isUserLoggedIn()) {
         "home"
@@ -23,7 +25,14 @@ fun NavGraph(
         "login"
     }
     NavHost(navController = navController, startDestination = startDestination) {
-        addNavGraph(navController, userRepository, signupViewModel, loginViewModel, chPasswordViewModel)
+        addNavGraph(
+            navController,
+            userRepository,
+            signupViewModel,
+            loginViewModel,
+            chPasswordViewModel,
+            followerViewmodel
+        )
     }
 }
 

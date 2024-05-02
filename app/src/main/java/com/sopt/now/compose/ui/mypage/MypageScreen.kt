@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 
 @Composable
@@ -33,7 +32,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository) {
                 .padding(padding)
                 .padding(horizontal = 16.dp),
         ) {
-            val (userImg, userNickname, userPhone, userId, chPw, logout) = createRefs()
+            val (userImg, userNickname, follower, userPhone, userId, chPw, logout) = createRefs()
 
             userRepository.getUserData()?.let { user ->
                 Image(
@@ -58,6 +57,26 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository) {
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                TextButton(
+                    modifier = Modifier.constrainAs(follower) {
+                        top.linkTo(userNickname.top)
+                        start.linkTo(userNickname.end, margin = 8.dp)
+                        bottom.linkTo(userNickname.bottom)
+                    },
+                    onClick = {
+                        navController.navigate("follower")
+                        {
+                            popUpTo("mypage") { inclusive = true }
+                        }
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.btn_follower),
+                        fontSize = 20.sp,
+                        color = Color.DarkGray
+                    )
+                }
 
 
                 Text(

@@ -22,6 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
+import com.sopt.now.compose.ui.follower.FollowerItem
+import com.sopt.now.compose.ui.follower.FollowerViewModel
 import com.sopt.now.compose.ui.login.LoginViewModel
 import com.sopt.now.compose.ui.navigation.BottomNavigationItem
 import com.sopt.now.compose.ui.navigation.BottomNavigationBar
@@ -39,7 +41,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val loginViewModel = remember { LoginViewModel(userRepository) }
             val signupViewModel = remember { SignupViewModel(userRepository) }
-            val chPasswordViewModel = remember{ ChPasswordViewModel(userRepository) }
+            val chPasswordViewModel = remember { ChPasswordViewModel(userRepository) }
+            val followerViewmodel = remember { FollowerViewModel() }
 
             MainContent(
                 navController,
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
                 signupViewModel,
                 loginViewModel,
                 chPasswordViewModel,
+                followerViewmodel
             ) { userRepository.logoutUser() }
         }
     }
@@ -60,7 +64,8 @@ fun MainContent(
     userRepository: UserRepository,
     signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel,
-    chPasswordViewModel : ChPasswordViewModel,
+    chPasswordViewModel: ChPasswordViewModel,
+    followerViewmodel: FollowerViewModel,
     onLogout: () -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -86,9 +91,10 @@ fun MainContent(
             NavGraph(
                 navController = navController,
                 userRepository = userRepository,
-                signupViewModel =signupViewModel,
+                signupViewModel = signupViewModel,
                 loginViewModel = loginViewModel,
-                chPasswordViewModel = chPasswordViewModel
+                chPasswordViewModel = chPasswordViewModel,
+                followerViewmodel = followerViewmodel
             )
         }
     }

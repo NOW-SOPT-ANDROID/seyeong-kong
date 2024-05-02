@@ -6,6 +6,8 @@ import androidx.navigation.compose.composable
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.ui.ch_password.ChPasswordScreen
 import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
+import com.sopt.now.compose.ui.follower.FollowerScreen
+import com.sopt.now.compose.ui.follower.FollowerViewModel
 import com.sopt.now.compose.ui.home.HomeScreen
 import com.sopt.now.compose.ui.login.LoginScreen
 import com.sopt.now.compose.ui.login.LoginViewModel
@@ -19,12 +21,14 @@ fun NavGraphBuilder.addNavGraph(
     userRepository: UserRepository,
     signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel,
-    chPasswordViewModel: ChPasswordViewModel
+    chPasswordViewModel: ChPasswordViewModel,
+    followerViewmodel: FollowerViewModel,
 ) {
     composable("home") { HomeScreen() }
     composable("search") { SearchScreen() }
     composable("login") { LoginScreen(navController, loginViewModel) }
     composable("signup") { SignupScreen(navController, signupViewModel) }
     composable("mypage") { MypageScreen(navController, userRepository) }
-    composable("chPassword") { ChPasswordScreen( navController, chPasswordViewModel)}
+    composable("chPassword") { ChPasswordScreen(navController, chPasswordViewModel) }
+    composable("follower") { FollowerScreen(followerViewmodel) }
 }
