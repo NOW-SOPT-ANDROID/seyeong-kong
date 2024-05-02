@@ -3,6 +3,7 @@ package com.sopt.now.compose.ui.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -16,40 +17,32 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.ui.home.HomeScreen
-import com.sopt.now.compose.ui.login.LoginScreen
 import com.sopt.now.compose.ui.login.LoginViewModel
-import com.sopt.now.compose.ui.mypage.MypageScreen
-import com.sopt.now.compose.ui.search.SearchScreen
-import com.sopt.now.compose.ui.signup.SignupScreen
-import com.sopt.now.compose.ui.signup.SignupViewModel
+import com.sopt.now.compose.ui.navigation.BottomNavigationItem
+import com.sopt.now.compose.ui.navigation.BottomNavigationBar
+import com.sopt.now.compose.ui.navigation.NavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val userRepository = UserRepository(applicationContext)
         val user = userRepository.getUserData()
-        val startDestination = if (userRepository.isUserLoggedIn()) "home" else "login"
 
         setContent {
             val navController = rememberNavController()
             val loginViewModel = remember { LoginViewModel(userRepository) }
-            val signupViewModel = remember { SignupViewModel(application) }
+
             MainContent(
                 navController,
-                startDestination,
                 user,
                 userRepository,
                 loginViewModel,
-                signupViewModel
             ) { userRepository.clearUserData() }
-
         }
     }
 }
@@ -57,12 +50,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainContent(
     navController: NavHostController,
-    startDestination: String,
     user: User?,
     userRepository: UserRepository,
     loginViewModel: LoginViewModel,
-    signupViewModel: SignupViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -74,28 +65,22 @@ fun MainContent(
     )
     val routes = listOf("home", "search", "mypage")
 
-
     Scaffold(
         bottomBar = {
             if (currentRoute in routes) {
                 NavigationBar {
-                    if (currentRoute in routes) {
-                        BottomNavigationBar(navController, selectedItem, items, routes)
-                    }
+                    BottomNavigationBar(navController, selectedItem, items, routes)
                 }
             }
         }
     ) { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = startDestination,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("home") { HomeScreen() }
-            composable("search") { SearchScreen() }
-            composable("mypage") { MypageScreen(navController, userRepository, user) }
-            composable("login") { LoginScreen(navController, loginViewModel) }
-            composable("signup") { SignupScreen(navController, signupViewModel) }
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NavGraph(
+                navController = navController,
+                userRepository = userRepository,
+                user = user,
+                loginViewModel = loginViewModel
+            )
         }
     }
 }
