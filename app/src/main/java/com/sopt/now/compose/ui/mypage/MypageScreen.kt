@@ -23,7 +23,7 @@ import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 
 @Composable
-fun MypageScreen(navController: NavController, userRepository: UserRepository, user: User?) {
+fun MypageScreen(navController: NavController, userRepository: UserRepository) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { padding ->
@@ -33,9 +33,9 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                 .padding(padding)
                 .padding(horizontal = 16.dp),
         ) {
-            val (userImg, userNickname, userPhone, userId, logout) = createRefs()
+            val (userImg, userNickname, userPhone, userId, chPw, logout) = createRefs()
 
-            user?.let { user ->
+            userRepository.getUserData()?.let { user ->
                 Image(
                     modifier = Modifier
                         .constrainAs(userImg) {
@@ -82,10 +82,30 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                 )
 
                 TextButton(
-                    modifier = Modifier.constrainAs(logout) {
+                    modifier = Modifier.constrainAs(chPw) {
                         top.linkTo(userPhone.bottom, margin = 10.dp)
-                        start.linkTo(userPhone.start)
-                        end.linkTo(userPhone.end)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    onClick = {
+                        navController.navigate("chPassword")
+                        {
+                            popUpTo("mypage") { inclusive = true }
+                        }
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.ch_pw),
+                        fontSize = 20.sp,
+                        color = Color.DarkGray
+                    )
+                }
+
+                TextButton(
+                    modifier = Modifier.constrainAs(logout) {
+                        top.linkTo(chPw.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     },
                     onClick = {
                         userRepository.logoutUser()

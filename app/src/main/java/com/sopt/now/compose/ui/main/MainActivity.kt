@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
 import com.sopt.now.compose.ui.login.LoginViewModel
 import com.sopt.now.compose.ui.navigation.BottomNavigationItem
 import com.sopt.now.compose.ui.navigation.BottomNavigationBar
@@ -37,7 +38,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val loginViewModel = remember { LoginViewModel(userRepository) }
-            val signupViewModel =remember {SignupViewModel(userRepository) }
+            val signupViewModel = remember { SignupViewModel(userRepository) }
+            val chPasswordViewModel = remember{ ChPasswordViewModel(userRepository) }
 
             MainContent(
                 navController,
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 userRepository,
                 signupViewModel,
                 loginViewModel,
+                chPasswordViewModel,
             ) { userRepository.logoutUser() }
         }
     }
@@ -57,6 +60,7 @@ fun MainContent(
     userRepository: UserRepository,
     signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel,
+    chPasswordViewModel : ChPasswordViewModel,
     onLogout: () -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -82,9 +86,9 @@ fun MainContent(
             NavGraph(
                 navController = navController,
                 userRepository = userRepository,
-                user = user,
                 signupViewModel =signupViewModel,
-                loginViewModel = loginViewModel
+                loginViewModel = loginViewModel,
+                chPasswordViewModel = chPasswordViewModel
             )
         }
     }
