@@ -33,7 +33,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                 .padding(padding)
                 .padding(horizontal = 16.dp),
         ) {
-            val (userImg, userNickname, userMbti, userId, logout) = createRefs()
+            val (userImg, userNickname, userPhone, userId, logout) = createRefs()
 
             user?.let { user ->
                 Image(
@@ -59,15 +59,6 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                     fontWeight = FontWeight.Bold
                 )
 
-                Text(
-                    modifier = Modifier.constrainAs(userMbti) {
-                        top.linkTo(userNickname.top)
-                        bottom.linkTo(userNickname.bottom)
-                        start.linkTo(userNickname.end, margin = 7.dp)
-                    },
-                    text = user.mbti,
-                    fontSize = 20.sp,
-                )
 
                 Text(
                     modifier = Modifier.constrainAs(userId) {
@@ -79,11 +70,22 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                     fontSize = 20.sp
                 )
 
+                Text(
+                    modifier = Modifier.constrainAs(userPhone) {
+                        top.linkTo(userId.bottom, margin = 5.dp)
+                        bottom.linkTo(logout.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    text = user.phone,
+                    fontSize = 20.sp,
+                )
+
                 TextButton(
                     modifier = Modifier.constrainAs(logout) {
-                        top.linkTo(userId.bottom, margin = 10.dp)
-                        start.linkTo(userId.start)
-                        end.linkTo(userId.end)
+                        top.linkTo(userPhone.bottom, margin = 10.dp)
+                        start.linkTo(userPhone.start)
+                        end.linkTo(userPhone.end)
                     },
                     onClick = {
                         userRepository.clearUserData()
