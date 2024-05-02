@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.data.network.request.RequestLoginDto
+import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable

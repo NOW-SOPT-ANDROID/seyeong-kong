@@ -1,13 +1,12 @@
 package com.sopt.now.compose.ui.ch_password
 
 import android.util.Log
-import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.data.network.ServicePool
-import com.sopt.now.compose.data.network.reponse.ResponseDto
-import com.sopt.now.compose.data.network.request.RequestChPwDto
+import com.sopt.now.compose.network.service.ServicePool
+import com.sopt.now.compose.network.reponse.ResponseDto
+import com.sopt.now.compose.network.request.RequestChPwDto
 import com.sopt.now.compose.ui.AuthState
 import org.json.JSONObject
 import retrofit2.Call
