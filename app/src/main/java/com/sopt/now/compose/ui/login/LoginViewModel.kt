@@ -26,13 +26,13 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     val data: ResponseDto? = response.body()
-                    val userId = response.headers()["location"]
+                    val memberId = response.headers()["location"] ?: "unknown"
                     userRepository.setUserLoggedIn(true)
                     liveData.value = AuthState(
                         isSuccess = true,
-                        message = "로그인 성공 유저의 ID는 $userId 입니다."
+                        message = "로그인 성공 유저의 ID는 $memberId 입니다."
                     )
-                    Log.d("Login", "data: $data, userId: $userId")
+                    Log.d("Login", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
