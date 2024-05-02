@@ -37,6 +37,10 @@ class UserRepository(context: Context) {
         sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
     }
 
+    fun updateUserPassword(newPassword: String) {
+        sharedPreferences.edit().putString(KEY_USER_PW, newPassword).apply()
+    }
+
     companion object {
         private const val KEY_USER_ID = "UserID"
         private const val KEY_USER_PW = "Password"
