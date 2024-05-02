@@ -1,4 +1,4 @@
-package com.sopt.now.compose.data.network.request
+package com.sopt.now.compose.network.request
 
 import kotlinx.serialization.Serializable
 
