@@ -21,6 +21,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,20 +38,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.data.network.request.RequestLoginDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
-    val context = LocalContext.current
-    val userRepository = UserRepository(context)
-    val userData = userRepository.getUserData()
-
-    var inputId by remember { mutableStateOf(userData?.id ?: "") }
-    var inputPw by remember { mutableStateOf(userData?.password ?: "") }
-
+    var inputId by remember { mutableStateOf("") }
+    var inputPw by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
-    var showSnackbar by remember { mutableStateOf(false) }
-    val failLoginMessage = stringResource(R.string.fail_login)
+    val authState by viewModel.liveData.observeAsState()
+
+    LaunchedEffect(authState) {
+        authState?.let { state ->
+            snackbarHostState.showSnackbar(
+                message = state.message,
+                duration = SnackbarDuration.Short
+            )
+            if (state.isSuccess) {
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -108,30 +118,13 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             CustomBtn(
                 text = stringResource(R.string.btn_login),
                 onClick = {
-                    if (viewModel.loginUser(inputId, inputPw)) {
-                        viewModel.setUserLoggedIn(true)
-                        navController.navigate("home") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    } else {
-                        showSnackbar = true
-                    }
+                    viewModel.login(RequestLoginDto(inputId, inputPw))
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
 
-        }
-
-        LaunchedEffect(showSnackbar) {
-            if (showSnackbar) {
-                snackbarHostState.showSnackbar(
-                    message = failLoginMessage,
-                    duration = SnackbarDuration.Short
-                )
-                showSnackbar = false
-            }
         }
     }
 }
