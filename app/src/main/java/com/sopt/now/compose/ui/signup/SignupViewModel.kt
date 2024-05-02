@@ -1,8 +1,6 @@
 package com.sopt.now.compose.ui.signup
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.compose.data.User

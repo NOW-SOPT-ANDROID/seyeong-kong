@@ -1,7 +1,6 @@
 package com.sopt.now.compose.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sopt.now.compose.data.User
@@ -15,7 +14,7 @@ fun NavGraph(
     userRepository: UserRepository,
     user: User?,
     signupViewModel: SignupViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
 ) {
     val startDestination = if (user != null || userRepository.isUserLoggedIn()) {
         "home"

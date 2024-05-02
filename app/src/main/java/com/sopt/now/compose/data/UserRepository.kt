@@ -15,11 +15,6 @@ class UserRepository(context: Context) {
         return sharedPreferences.getBoolean("isLoggedIn", false)
     }
 
-    fun isValidateUser(inputId: String, inputPw: String): Boolean {
-        val user = getUserData()
-        return user != null && user.id == inputId && user.password == inputPw
-    }
-
     fun getUserData(): User? {
         val userId = sharedPreferences.getString(KEY_USER_ID, null) ?: return null
         val password = sharedPreferences.getString(KEY_USER_PW, null) ?: return null
@@ -36,10 +31,6 @@ class UserRepository(context: Context) {
             putString(KEY_PHONE, user.phone)
             apply()
         }
-    }
-
-    fun clearUserData() {
-        sharedPreferences.edit().clear().apply()
     }
 
     fun logoutUser() {

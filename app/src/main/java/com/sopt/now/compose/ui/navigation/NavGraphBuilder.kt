@@ -18,7 +18,7 @@ fun NavGraphBuilder.addNavGraph(
     userRepository: UserRepository,
     user: User?,
     signupViewModel: SignupViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
 ) {
     composable("home") { HomeScreen() }
     composable("search") { SearchScreen() }
