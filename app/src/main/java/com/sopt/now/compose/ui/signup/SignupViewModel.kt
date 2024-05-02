@@ -1,86 +1,65 @@
 package com.sopt.now.compose.ui.signup
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sopt.now.compose.R
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.data.network.request.RequestSignUpDto
+import com.sopt.now.compose.data.network.reponse.ResponseDto
+import com.sopt.now.compose.data.network.ServicePool
+import com.sopt.now.compose.ui.AuthState
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SignupViewModel(application: Application) : AndroidViewModel(application) {
     private val userRepository = UserRepository(application)
 
-    private val _signupResult = MutableLiveData<Boolean>()
-    val signupResult: LiveData<Boolean> = _signupResult
+    private val authService by lazy { ServicePool.authService }
+    val liveData = MutableLiveData<AuthState>()
 
-    private val _errorMsg = MutableLiveData<Int>()
-    val errorMsg: LiveData<Int> = _errorMsg
-
-    fun isValidFormData(id: String, pw: String, nickname: String, mbti: String) {
-        if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(mbti)) {
-            val user = User(id, pw, nickname, mbti)
-            userRepository.saveUserData(user)
-            _signupResult.value = true
-        }
-    }
-
-    private fun isValidId(id: String): Boolean {
-        val idLength = id.length
-        return when {
-            idLength in MIN_ID_LENGTH..MAX_ID_LENGTH -> true
-            idLength > MAX_ID_LENGTH -> {
-                _errorMsg.value = R.string.id_less_than
-                false
+    fun signUp(request: RequestSignUpDto) {
+        authService.signUp(request).enqueue(object : Callback<ResponseDto> {
+            override fun onResponse(
+                call: Call<ResponseDto>,
+                response: Response<ResponseDto>,
+            ) {
+                if (response.isSuccessful) {
+                    val data: ResponseDto? = response.body()
+                    val memberId = response.headers()["location"] ?: "unknown"
+                    val user = User(
+                        request.authenticationId,
+                        request.password,
+                        request.nickname,
+                        request.phone
+                    )
+                    userRepository.saveUserData(user)
+                    liveData.value = AuthState(
+                        isSuccess = true,
+                        message = "회원가입 성공 유저의 ID는 $memberId 입니다."
+                    )
+                    Log.d("SignUp", "data: $data, userId: $memberId")
+                } else {
+                    val statusCode = response.code()
+                    val rawJson = response.errorBody()?.string() ?: "No error message provided"
+                    val error = JSONObject(rawJson).optString("message", "error message")
+                    liveData.value = AuthState(
+                        isSuccess = false,
+                        message = "회원가입 실패 $error"
+                    )
+                    Log.d("Fail_signup", "회원가입 실패: HTTP Status Code: $statusCode, Error: $error")
+                }
             }
 
-            else -> {
-                _errorMsg.value = R.string.id_greater_than
-                false
+            override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
+                liveData.value = AuthState(
+                    isSuccess = false,
+                    message = "서버 에러"
+                )
             }
-        }
-    }
-
-    private fun isValidPassword(password: String): Boolean {
-        val pwLength = password.length
-        return when {
-            pwLength in MIN_PW_LENGTH..MAX_PW_LENGTH -> true
-            pwLength > MAX_PW_LENGTH -> {
-                _errorMsg.value = R.string.pw_less_than
-                false
-            }
-
-            else -> {
-                _errorMsg.value = R.string.pw_greater_than
-                false
-            }
-
-        }
-    }
-
-    private fun isValidNickname(nickname: String): Boolean {
-        return if (nickname.isNotBlank()) {
-            true
-        } else {
-            _errorMsg.value = R.string.input_nickname
-            false
-        }
-    }
-
-    private fun isValidMbti(mbti: String): Boolean {
-        return if (mbti.isNotBlank() && mbti.length == MBTI_LENGTH) {
-            true
-        } else {
-            _errorMsg.value = R.string.invalid_mbti
-            false
-        }
-    }
-
-    companion object {
-        private const val MIN_ID_LENGTH = 6
-        private const val MAX_ID_LENGTH = 10
-        private const val MIN_PW_LENGTH = 8
-        private const val MAX_PW_LENGTH = 12
-        private const val MBTI_LENGTH = 4
+        })
     }
 }
