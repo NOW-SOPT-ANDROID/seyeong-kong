@@ -7,7 +7,7 @@
     <string name="input_pw">비밀번호를 입력해주세요</string>
     <string name="nickname">닉네임</string>
     <string name="input_nickname">닉네임을 입력해주세요</string>
-    <string name="mbti">MBTI</string>
+    <string name="phone">핸드폰 번호를 입력해주세요</string>
     <string name="input_mbti">mbti를 입력해주세요</string>
     <string name="login_sopt">Welome to SOPT</string>
     <string name="signup_kr">회원가입</string>

@@ -35,33 +35,39 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
+import com.sopt.now.compose.data.network.request.RequestSignUpDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun SignupScreen(navController: NavController, viewModel: SignupViewModel) {
+fun SignupScreen(navController: NavController) {
+    val viewModel: SignupViewModel = viewModel()
     val snackbarHostState = remember { SnackbarHostState() }
 
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var nickname by remember { mutableStateOf("") }
-    var mbti by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
 
-    val signupResult = viewModel.signupResult.observeAsState()
-    val errorMsg = viewModel.errorMsg.observeAsState().value
-    val message = errorMsg?.let { stringResource(id = it) }
+    val authState by viewModel.liveData.observeAsState()
 
-    LaunchedEffect(errorMsg) {
-        message?.let {
+    LaunchedEffect(authState) {
+        authState?.let { state ->
             snackbarHostState.showSnackbar(
-                message = it,
+                message = state.message,
                 duration = SnackbarDuration.Short
             )
+            if (state.isSuccess) {
+                navController.navigate("login") {
+                    popUpTo("signup") { inclusive = true }
+                }
+            }
         }
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {}
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -111,9 +117,9 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = mbti,
-                onValueChange = { mbti = it.uppercase() },
-                label = { Text(stringResource(R.string.mbti)) },
+                value = phone,
+                onValueChange = { phone = it.uppercase() },
+                label = { Text(stringResource(R.string.phone)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 modifier = Modifier.fillMaxWidth()
@@ -123,12 +129,7 @@ fun SignupScreen(navController: NavController, viewModel: SignupViewModel) {
             CustomBtn(
                 text = stringResource(R.string.signup_kr),
                 onClick = {
-                    viewModel.isValidFormData(userId, password, nickname, mbti)
-                    if (signupResult.value == true) {
-                        navController.navigate("login") {
-                            popUpTo("signup") { inclusive = true }
-                        }
-                    }
+                    viewModel.signUp(RequestSignUpDto(userId, password, nickname, phone))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
