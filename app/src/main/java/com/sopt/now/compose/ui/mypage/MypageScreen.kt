@@ -88,7 +88,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                         end.linkTo(userPhone.end)
                     },
                     onClick = {
-                        userRepository.clearUserData()
+                        userRepository.logoutUser()
                         navController.navigate("login")
                         {
                             popUpTo("mypage") { inclusive = true }
