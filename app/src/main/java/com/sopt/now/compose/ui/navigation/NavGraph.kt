@@ -14,6 +14,7 @@ fun NavGraph(
     navController: NavHostController,
     userRepository: UserRepository,
     user: User?,
+    signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel
 ) {
     val startDestination = if (user != null || userRepository.isUserLoggedIn()) {
@@ -22,7 +23,7 @@ fun NavGraph(
         "login"
     }
     NavHost(navController = navController, startDestination = startDestination) {
-        addNavGraph(navController, userRepository, user, loginViewModel)
+        addNavGraph(navController, userRepository, user, signupViewModel, loginViewModel)
     }
 }
 

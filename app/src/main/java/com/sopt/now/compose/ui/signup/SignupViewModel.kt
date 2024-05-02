@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.data.network.request.RequestSignUpDto
@@ -15,9 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SignupViewModel(application: Application) : AndroidViewModel(application) {
-    private val userRepository = UserRepository(application)
-
+class SignupViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val liveData = MutableLiveData<AuthState>()
 

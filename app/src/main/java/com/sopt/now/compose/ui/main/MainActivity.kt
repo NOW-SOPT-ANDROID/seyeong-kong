@@ -25,6 +25,7 @@ import com.sopt.now.compose.ui.login.LoginViewModel
 import com.sopt.now.compose.ui.navigation.BottomNavigationItem
 import com.sopt.now.compose.ui.navigation.BottomNavigationBar
 import com.sopt.now.compose.ui.navigation.NavGraph
+import com.sopt.now.compose.ui.signup.SignupViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +37,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val loginViewModel = remember { LoginViewModel(userRepository) }
+            val signupViewModel =remember {SignupViewModel(userRepository) }
 
             MainContent(
                 navController,
                 user,
                 userRepository,
+                signupViewModel,
                 loginViewModel,
-            ) { userRepository.clearUserData() }
+            ) { userRepository.logoutUser() }
         }
     }
 }
@@ -52,6 +55,7 @@ fun MainContent(
     navController: NavHostController,
     user: User?,
     userRepository: UserRepository,
+    signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel,
     onLogout: () -> Unit,
 ) {
@@ -79,6 +83,7 @@ fun MainContent(
                 navController = navController,
                 userRepository = userRepository,
                 user = user,
+                signupViewModel =signupViewModel,
                 loginViewModel = loginViewModel
             )
         }

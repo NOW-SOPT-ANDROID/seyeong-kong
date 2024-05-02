@@ -17,11 +17,12 @@ fun NavGraphBuilder.addNavGraph(
     navController: NavHostController,
     userRepository: UserRepository,
     user: User?,
+    signupViewModel: SignupViewModel,
     loginViewModel: LoginViewModel
 ) {
     composable("home") { HomeScreen() }
     composable("search") { SearchScreen() }
-    composable("mypage") { MypageScreen(navController, userRepository, user) }
     composable("login") { LoginScreen(navController, loginViewModel) }
-    composable("signup") { SignupScreen(navController) }
+    composable("signup") { SignupScreen(navController, signupViewModel) }
+    composable("mypage") { MypageScreen(navController, userRepository, user) }
 }
