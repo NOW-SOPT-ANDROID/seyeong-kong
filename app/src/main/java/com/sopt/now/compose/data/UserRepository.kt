@@ -42,6 +42,10 @@ class UserRepository(context: Context) {
         sharedPreferences.edit().clear().apply()
     }
 
+    fun logoutUser() {
+        sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
+    }
+
     companion object {
         private const val KEY_USER_ID = "UserID"
         private const val KEY_USER_PW = "Password"
