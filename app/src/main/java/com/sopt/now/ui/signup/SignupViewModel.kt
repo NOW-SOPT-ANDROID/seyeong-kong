@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.R
-import com.sopt.now.data.Sopt
+import com.sopt.now.SoptApp
 import com.sopt.now.data.User
 
 class SignupViewModel: ViewModel() {
@@ -17,7 +17,7 @@ class SignupViewModel: ViewModel() {
     fun isValidFormData(id: String, pw: String, nickname: String, mbti: String) {
         if (isValidId(id) && isValidPassword(pw) && isValidNickname(nickname) && isValidMbti(mbti)) {
             val user = User(id, pw, nickname, mbti)
-            Sopt.userRepository.saveUserData(user)
+            SoptApp().appContainer.userRepository.saveUserData(user)
             _signupResult.value = true
         } else {
             _signupResult.value = false

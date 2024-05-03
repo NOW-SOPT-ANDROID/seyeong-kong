@@ -9,13 +9,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.Sopt
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding
         get() = requireNotNull(_binding) { "FragmentLoginBinding is not initialized" }
+
+    private val userRepository by lazy {
+        (requireActivity().application as SoptApp).appContainer.userRepository
+    }
+
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
@@ -37,7 +42,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setUserInfo() {
-        val user = Sopt.userRepository.getUserData()
+        val user = userRepository.getUserData()
         user?.let {
             binding.etId.setText(it.id)
             binding.etPassword.setText(it.password)
