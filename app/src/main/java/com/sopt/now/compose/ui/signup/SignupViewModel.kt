@@ -3,8 +3,8 @@ package com.sopt.now.compose.ui.signup
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.data.User
-import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.service.ServicePool
@@ -14,7 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SignupViewModel(private val userRepository: UserRepository) : ViewModel() {
+class SignupViewModel : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val liveData = MutableLiveData<AuthState>()
 
@@ -33,7 +33,7 @@ class SignupViewModel(private val userRepository: UserRepository) : ViewModel() 
                         request.nickname,
                         request.phone
                     )
-                    userRepository.saveUserData(user)
+                    SoptApp.userRepository.saveUserData(user)
                     liveData.value = AuthState(
                         isSuccess = true,
                         message = "회원가입 성공 유저의 ID는 $memberId 입니다."

@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,14 +36,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
-    var inputId by remember { mutableStateOf("") }
-    var inputPw by remember { mutableStateOf("") }
+    val user = SoptApp.userRepository.getUserData()
+    var inputId by remember { mutableStateOf(user?.id ?: "") }
+    var inputPw by remember { mutableStateOf(user?.password ?: "") }
     val snackbarHostState = remember { SnackbarHostState() }
     val authState by viewModel.liveData.observeAsState()
 

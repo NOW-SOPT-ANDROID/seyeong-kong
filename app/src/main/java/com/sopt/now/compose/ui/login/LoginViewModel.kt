@@ -3,7 +3,7 @@ package com.sopt.now.compose.ui.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.request.RequestLoginDto
@@ -13,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
+class LoginViewModel : ViewModel() {
 
     private val authService by lazy { ServicePool.authService }
     val liveData = MutableLiveData<AuthState>()
@@ -27,7 +27,8 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                 if (response.isSuccessful) {
                     val data: ResponseDto? = response.body()
                     val memberId = response.headers()["location"] ?: "unknown"
-                    userRepository.setUserLoggedIn(true)
+                    SoptApp.userRepository.setUserLoggedIn(true)
+                    SoptApp.userRepository.setMemberId(memberId)
                     liveData.value = AuthState(
                         isSuccess = true,
                         message = "로그인 성공 유저의 ID는 $memberId 입니다."
