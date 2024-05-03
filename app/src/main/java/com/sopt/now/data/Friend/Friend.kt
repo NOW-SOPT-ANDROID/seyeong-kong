@@ -1,4 +1,4 @@
-package com.sopt.now.data.Friend
+package com.sopt.now.data.friend
 
 import androidx.annotation.DrawableRes
 import androidx.room.Entity

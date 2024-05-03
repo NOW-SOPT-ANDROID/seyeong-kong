@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.sopt.now.data.Friend.Friend
+import com.sopt.now.data.friend.Friend
 import com.sopt.now.databinding.ItemFriendBinding
 
 class FriendAdapter : ListAdapter<Friend, FriendViewHolder>(FriendDiff()) {

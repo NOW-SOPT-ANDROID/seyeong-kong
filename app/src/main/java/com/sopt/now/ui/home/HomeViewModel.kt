@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.sopt.now.AppContainer
 import com.sopt.now.R
-import com.sopt.now.data.Friend.AppContainer
-import com.sopt.now.data.Friend.Friend
-import com.sopt.now.data.Friend.FriendsRepository
 import com.sopt.now.data.Profile
+import com.sopt.now.data.friend.Friend
+import com.sopt.now.data.friend.FriendsRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {

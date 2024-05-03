@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import com.sopt.now.R
-import com.sopt.now.data.Friend.Friend
+import com.sopt.now.data.friend.Friend
 import com.sopt.now.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
