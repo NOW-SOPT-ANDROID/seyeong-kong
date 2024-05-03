@@ -27,7 +27,6 @@ class ChPasswordViewModel: ViewModel() {
                     val data: ResponseDto? = response.body()
                     val userId = response.headers()["location"]
                     SoptApp.userRepository.updateUserPassword(request.newPassword)
-                    SoptApp.userRepository.logoutUser()
                     liveData.value = AuthState(
                         isSuccess = true,
                         message = "비밀번호 변경 성공 유저의 ID는 $userId 입니다."

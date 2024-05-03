@@ -45,6 +45,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val user = SoptApp.userRepository.getUserData()
     var inputId by remember { mutableStateOf(user?.id ?: "") }
     var inputPw by remember { mutableStateOf(user?.password ?: "") }
+    var isLoginAttempted by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val authState by viewModel.liveData.observeAsState()
 
@@ -54,11 +55,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                 message = state.message,
                 duration = SnackbarDuration.Short
             )
-            if (state.isSuccess) {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
-                }
-            }
         }
     }
 
@@ -119,12 +115,21 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                 text = stringResource(R.string.btn_login),
                 onClick = {
                     viewModel.login(RequestLoginDto(inputId, inputPw))
+                    isLoginAttempted = true
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
 
+        }
+    }
+
+    if (isLoginAttempted && authState?.isSuccess == true) {
+        LaunchedEffect(authState) {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
         }
     }
 }
