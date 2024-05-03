@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sopt.now.compose.network.reponse.ResponseFollowerDto
 
 @Composable
-fun FollowerScreen(viewModel: FollowerViewModel) {
+fun FollowerScreen() {
+    val viewModel: FollowerViewModel = viewModel()
     val followers = viewModel.followers.collectAsState().value
 
     LazyColumn {

@@ -12,12 +12,7 @@ import com.sopt.now.compose.ui.signup.SignupViewModel
 
 @Composable
 fun NavGraph(
-    navController: NavHostController,
-    signupViewModel: SignupViewModel,
-    loginViewModel: LoginViewModel,
-    chPasswordViewModel: ChPasswordViewModel,
-    mypageViewModel: MypageViewModel,
-    followerViewModel: FollowerViewModel,
+    navController: NavHostController
 ) {
     val startDestination = if (SoptApp.userRepository.isUserLoggedIn()) {
         "home"
@@ -26,12 +21,7 @@ fun NavGraph(
     }
     NavHost(navController = navController, startDestination = startDestination) {
         addNavGraph(
-            navController,
-            signupViewModel,
-            loginViewModel,
-            chPasswordViewModel,
-            mypageViewModel,
-            followerViewModel
+            navController
         )
     }
 }

@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.SoptApp
@@ -41,12 +42,13 @@ import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController) {
     val user = SoptApp.userRepository.getUserData()
     var inputId by remember { mutableStateOf(user?.id ?: "") }
     var inputPw by remember { mutableStateOf(user?.password ?: "") }
     var isLoginAttempted by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val viewModel: LoginViewModel = viewModel()
     val authState by viewModel.liveData.observeAsState()
 
     LaunchedEffect(authState) {

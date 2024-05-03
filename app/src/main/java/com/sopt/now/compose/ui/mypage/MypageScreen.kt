@@ -23,11 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 
 @Composable
-fun MypageScreen(navController: NavController, viewModel: MypageViewModel) {
+fun MypageScreen(navController: NavController) {
+    val viewModel: MypageViewModel = viewModel()
     val authState by viewModel.liveData.observeAsState()
     val userState by viewModel.userLiveData.observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }

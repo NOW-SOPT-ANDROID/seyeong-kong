@@ -32,14 +32,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.network.request.RequestChPwDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun ChPasswordScreen(navController: NavController, viewModel: ChPasswordViewModel) {
+fun ChPasswordScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val viewModel:ChPasswordViewModel = viewModel()
 
     var prePw by remember { mutableStateOf("") }
     var newPw by remember { mutableStateOf("") }

@@ -19,15 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.sopt.now.compose.SoptApp
-import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
-import com.sopt.now.compose.ui.follower.FollowerViewModel
-import com.sopt.now.compose.ui.login.LoginViewModel
-import com.sopt.now.compose.ui.mypage.MypageViewModel
 import com.sopt.now.compose.ui.navigation.BottomNavigationItem
 import com.sopt.now.compose.ui.navigation.BottomNavigationBar
 import com.sopt.now.compose.ui.navigation.NavGraph
-import com.sopt.now.compose.ui.signup.SignupViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,33 +29,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val loginViewModel = remember { LoginViewModel() }
-            val signupViewModel = remember { SignupViewModel() }
-            val chPasswordViewModel = remember { ChPasswordViewModel() }
-            val myPageViewModel = remember { MypageViewModel() }
-            val followerViewModel = remember { FollowerViewModel() }
 
             MainContent(
-                navController,
-                signupViewModel,
-                loginViewModel,
-                chPasswordViewModel,
-                myPageViewModel,
-                followerViewModel
-            ) { SoptApp.userRepository.logoutUser() }
+                navController
+            )
         }
     }
 }
 
 @Composable
 fun MainContent(
-    navController: NavHostController,
-    signupViewModel: SignupViewModel,
-    loginViewModel: LoginViewModel,
-    chPasswordViewModel: ChPasswordViewModel,
-    mypageViewModel: MypageViewModel,
-    followerViewModel: FollowerViewModel,
-    onLogout: () -> Unit,
+    navController: NavHostController
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -84,12 +62,7 @@ fun MainContent(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavGraph(
-                navController = navController,
-                signupViewModel = signupViewModel,
-                loginViewModel = loginViewModel,
-                chPasswordViewModel = chPasswordViewModel,
-                mypageViewModel = mypageViewModel,
-                followerViewModel = followerViewModel
+                navController = navController
             )
         }
     }
