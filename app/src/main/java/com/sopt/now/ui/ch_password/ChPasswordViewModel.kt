@@ -25,13 +25,13 @@ class ChPasswordViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     val data: ResponseDto? = response.body()
-                    val userId = response.headers()["location"]
+                    val memberId = response.headers()["location"]?: "unknown"
                     Sopt.userRepository.updateUserPassword(request.newPassword)
                     liveData.value = AuthState(
                         isSuccess = true,
-                        message = "비밀번호 변경 성공 유저의 ID는 $userId 입니다."
+                        message = "비밀번호 변경 성공 유저의 ID는 $memberId 입니다."
                     )
-                    Log.d("ChPassword", "data: $data, userId: $userId")
+                    Log.d("ChPassword", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
