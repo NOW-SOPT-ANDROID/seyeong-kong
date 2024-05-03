@@ -49,6 +49,7 @@ class LoginFragment : Fragment() {
         viewModel.liveData.observe(viewLifecycleOwner) { authState ->
             if(authState.isSuccess) {
                 findNavController().navigate(R.id.action_login_to_home)
+                Snackbar.make(binding.root, authState.message, Snackbar.LENGTH_SHORT).show()
             } else {
                 Snackbar.make(binding.root, authState.message, Snackbar.LENGTH_SHORT).show()
             }
