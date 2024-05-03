@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 
 class UserRepository(private val preferences: SharedPreferences) {
     fun setUserLoggedIn(loggedIn: Boolean) {
-        preferences.edit().putBoolean("isLoggedIn", loggedIn).apply()
+        preferences.edit().putBoolean("isLoggedIn", loggedIn).commit()
     }
 
     fun isUserLoggedIn(): Boolean {
