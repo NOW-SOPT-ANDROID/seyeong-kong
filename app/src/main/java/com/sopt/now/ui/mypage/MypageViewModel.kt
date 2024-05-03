@@ -38,6 +38,4 @@ class MypageViewModel: ViewModel() {
     fun logout() {
         userRepository.logoutUser()
     }
-
-
 }
