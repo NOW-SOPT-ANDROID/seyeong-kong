@@ -3,7 +3,7 @@ package com.sopt.now.ui.signup
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.data.Sopt
+import com.sopt.now.Sopt
 import com.sopt.now.data.User
 import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto

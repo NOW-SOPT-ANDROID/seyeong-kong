@@ -3,7 +3,7 @@ package com.sopt.now.ui.ch_password
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.data.Sopt
+import com.sopt.now.Sopt
 import com.sopt.now.network.request.RequestChPwDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool

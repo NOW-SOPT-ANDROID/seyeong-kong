@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.data.Sopt
+import com.sopt.now.Sopt
 import com.sopt.now.databinding.FragmentLoginBinding
 import com.sopt.now.network.request.RequestLoginDto
 

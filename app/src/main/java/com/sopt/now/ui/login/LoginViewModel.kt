@@ -3,7 +3,7 @@ package com.sopt.now.ui.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.data.Sopt
+import com.sopt.now.Sopt
 import com.sopt.now.network.request.RequestLoginDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
@@ -25,13 +25,14 @@ class LoginViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     val data: ResponseDto? = response.body()
-                    val userId = response.headers()["location"]
+                    val memberId = response.headers()["location"]?: "unknown"
                     Sopt.userRepository.setUserLoggedIn(true)
+                    Sopt.userRepository.setMemberId(memberId)
                     liveData.value = AuthState(
                         isSuccess = true,
-                        message = "로그인 성공 유저의 ID는 $userId 입니다."
+                        message = "로그인 성공 유저의 ID는 $memberId 입니다."
                     )
-                    Log.d("Login", "data: $data, userId: $userId")
+                    Log.d("Login", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
