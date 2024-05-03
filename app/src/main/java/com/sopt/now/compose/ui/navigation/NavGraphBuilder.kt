@@ -3,7 +3,6 @@ package com.sopt.now.compose.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.ui.ch_password.ChPasswordScreen
 import com.sopt.now.compose.ui.ch_password.ChPasswordViewModel
 import com.sopt.now.compose.ui.follower.FollowerScreen

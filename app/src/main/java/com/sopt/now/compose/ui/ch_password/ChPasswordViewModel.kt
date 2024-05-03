@@ -13,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChPasswordViewModel(): ViewModel() {
+class ChPasswordViewModel: ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val liveData = MutableLiveData<AuthState>()
 
