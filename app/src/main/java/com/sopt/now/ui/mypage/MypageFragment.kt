@@ -28,16 +28,17 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupObservers()
+        viewModel.info()
+        observeViewModel()
         initLogoutBtnClickListener()
         initChPasswordBtnClickListener()
         initFollowerClickListener()
     }
 
-    private fun setupObservers() {
+    private fun observeViewModel() {
         viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             user?.let {
-                binding.tvId.text = it.id
+                binding.tvId.text = it.authenticationId
                 binding.tvNickname.text = it.nickname
                 binding.tvPhone.text = it.phone
             }
