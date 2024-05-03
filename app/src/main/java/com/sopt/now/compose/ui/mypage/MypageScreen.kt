@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -19,10 +25,27 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.data.UserRepository
 
 @Composable
-fun MypageScreen(navController: NavController, userRepository: UserRepository) {
+fun MypageScreen(navController: NavController, viewModel: MypageViewModel) {
+    val authState by viewModel.liveData.observeAsState()
+    val userState by viewModel.userLiveData.observeAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(authState) {
+        authState?.let { state ->
+            snackbarHostState.showSnackbar(
+                message = state.message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.info()
+    }
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { padding ->
@@ -34,7 +57,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository) {
         ) {
             val (userImg, userNickname, follower, userPhone, userId, chPw, logout) = createRefs()
 
-            userRepository.getUserData()?.let { user ->
+            userState?.let { user ->
                 Image(
                     modifier = Modifier
                         .constrainAs(userImg) {
@@ -85,7 +108,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository) {
                         start.linkTo(userNickname.start)
                         end.linkTo(userNickname.end)
                     },
-                    text = user.id,
+                    text = user.authenticationId,
                     fontSize = 20.sp
                 )
 
@@ -127,7 +150,7 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository) {
                         end.linkTo(parent.end)
                     },
                     onClick = {
-                        userRepository.logoutUser()
+                        viewModel.logout()
                         navController.navigate("login")
                         {
                             popUpTo("mypage") { inclusive = true }
