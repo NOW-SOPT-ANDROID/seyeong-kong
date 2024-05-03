@@ -1,30 +1,26 @@
 package com.sopt.now.compose.data
 
-import android.content.Context
 import android.content.SharedPreferences
 
-class UserRepository(context: Context) {
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
-
+class UserRepository(private val preferences: SharedPreferences) {
     fun setUserLoggedIn(loggedIn: Boolean) {
-        sharedPreferences.edit().putBoolean("isLoggedIn", loggedIn).apply()
+        preferences.edit().putBoolean("isLoggedIn", loggedIn).commit()
     }
 
     fun isUserLoggedIn(): Boolean {
-        return sharedPreferences.getBoolean("isLoggedIn", false)
+        return preferences.getBoolean("isLoggedIn", false)
     }
 
     fun getUserData(): User? {
-        val userId = sharedPreferences.getString(KEY_USER_ID, null) ?: return null
-        val password = sharedPreferences.getString(KEY_USER_PW, null) ?: return null
-        val nickname = sharedPreferences.getString(KEY_NICKNAME, null) ?: return null
-        val phone = sharedPreferences.getString(KEY_PHONE, null) ?: return null
+        val userId = preferences.getString(KEY_USER_ID, null) ?: return null
+        val password = preferences.getString(KEY_USER_PW, null) ?: return null
+        val nickname = preferences.getString(KEY_NICKNAME, null) ?: return null
+        val phone = preferences.getString(KEY_PHONE, null) ?: return null
         return User(userId, password, nickname, phone)
     }
 
     fun saveUserData(user: User) {
-        sharedPreferences.edit().apply {
+        preferences.edit().apply {
             putString(KEY_USER_ID, user.id)
             putString(KEY_USER_PW, user.password)
             putString(KEY_NICKNAME, user.nickname)
@@ -34,11 +30,20 @@ class UserRepository(context: Context) {
     }
 
     fun logoutUser() {
-        sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
+        preferences.edit().putBoolean("isLoggedIn", false).apply()
     }
 
     fun updateUserPassword(newPassword: String) {
-        sharedPreferences.edit().putString(KEY_USER_PW, newPassword).apply()
+        preferences.edit().putString(KEY_USER_PW, newPassword).apply()
+    }
+
+
+    fun setMemberId(memberId: String) {
+        preferences.edit().putString(KEY_MEMBER_ID, memberId).apply()
+    }
+
+    fun getMemberId(): String? {
+        return preferences.getString(KEY_MEMBER_ID, null)
     }
 
     companion object {
@@ -46,5 +51,6 @@ class UserRepository(context: Context) {
         private const val KEY_USER_PW = "Password"
         private const val KEY_NICKNAME = "Nickname"
         private const val KEY_PHONE = "Phone"
+        private const val KEY_MEMBER_ID = "MemberID"
     }
 }
