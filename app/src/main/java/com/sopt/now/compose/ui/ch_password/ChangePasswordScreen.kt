@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.network.request.RequestChPwDto
+import com.sopt.now.compose.network.request.RequestChangePasswordDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
-fun ChPasswordScreen(navController: NavController) {
+fun ChangePasswordScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val viewModel:ChPasswordViewModel = viewModel()
+    val viewModel:ChangePasswordViewModel = viewModel()
 
     var prePw by remember { mutableStateOf("") }
     var newPw by remember { mutableStateOf("") }
@@ -126,7 +126,7 @@ fun ChPasswordScreen(navController: NavController) {
             CustomBtn(
                 text = stringResource(R.string.btn_ch_pw),
                 onClick = {
-                    viewModel.chPassword(RequestChPwDto(prePw, newPw, verifyPw))
+                    viewModel.chPassword(RequestChangePasswordDto(prePw, newPw, verifyPw))
                 },
                 modifier = Modifier.fillMaxWidth()
             )

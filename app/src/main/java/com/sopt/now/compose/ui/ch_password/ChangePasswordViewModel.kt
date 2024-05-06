@@ -6,18 +6,18 @@ import androidx.lifecycle.ViewModel
 import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.network.reponse.ResponseDto
-import com.sopt.now.compose.network.request.RequestChPwDto
+import com.sopt.now.compose.network.request.RequestChangePasswordDto
 import com.sopt.now.compose.ui.AuthState
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChPasswordViewModel: ViewModel() {
+class ChangePasswordViewModel: ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val liveData = MutableLiveData<AuthState>()
 
-    fun chPassword(request: RequestChPwDto) {
+    fun chPassword(request: RequestChangePasswordDto) {
         authService.chPassword(request).enqueue(object : Callback<ResponseDto> {
             override fun onResponse(
                 call: Call<ResponseDto>,

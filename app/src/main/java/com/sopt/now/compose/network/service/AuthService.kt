@@ -2,7 +2,7 @@ package com.sopt.now.compose.network.service
 
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.reponse.ResponseInfoDto
-import com.sopt.now.compose.network.request.RequestChPwDto
+import com.sopt.now.compose.network.request.RequestChangePasswordDto
 import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import retrofit2.Call
@@ -24,7 +24,7 @@ interface AuthService {
 
     @PATCH("member/password")
     fun chPassword(
-        @Body request: RequestChPwDto,
+        @Body request: RequestChangePasswordDto,
     ): Call<ResponseDto>
 
     @GET("member/info")
