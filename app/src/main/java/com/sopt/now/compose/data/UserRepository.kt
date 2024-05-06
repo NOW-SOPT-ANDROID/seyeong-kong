@@ -30,7 +30,7 @@ class UserRepository(private val preferences: SharedPreferences) {
     }
 
     fun logoutUser() {
-        preferences.edit().putBoolean("isLoggedIn", false).apply()
+        preferences.edit().clear().apply()
     }
 
     fun updateUserPassword(newPassword: String) {
