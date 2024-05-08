@@ -2,20 +2,20 @@ package com.sopt.now.ui.home
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.sopt.now.AppContainer
 import com.sopt.now.R
 import com.sopt.now.data.Profile
 import com.sopt.now.data.friend.Friend
-import com.sopt.now.data.friend.FriendsRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val friendsRepository: FriendsRepository = AppContainer(application).friendsRepository
+class HomeViewModel(application: Application) : ViewModel() {
+    private val appContainer: AppContainer = AppContainer(application.applicationContext)
+    private val friendsRepository = appContainer.provideFriendsRepository()
 
     val friends: LiveData<List<Friend>> = friendsRepository.getAllFriends().asLiveData()
 

@@ -16,7 +16,7 @@ class AppContainer(private val context: Context) {
         UserRepository(preferenceInstance)
     }
 
-    val friendsRepository: FriendsRepository by lazy {
-        OfflineFriendsRepository(FriendDatabase.getDatabase(context).friendDao())
+    fun provideFriendsRepository(): FriendsRepository {
+        return OfflineFriendsRepository(FriendDatabase.getDatabase(context).friendDao())
     }
 }
