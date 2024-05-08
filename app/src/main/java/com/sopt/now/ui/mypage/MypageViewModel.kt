@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModel
 import com.sopt.now.data.User
 import com.sopt.now.data.UserRepository
 
-class MypageViewModel: ViewModel() {
+class MypageViewModel(private val userRepository: UserRepository): ViewModel() {
     val userLiveData = MutableLiveData<User?>()
 
     init {
-        userLiveData.value = UserRepository.getUserData()
+        userRepository.getUserData()
     }
 
     fun logout() {
-        UserRepository.clearUserData()
+        userRepository.clearUserData()
         userLiveData.value = null
     }
 }

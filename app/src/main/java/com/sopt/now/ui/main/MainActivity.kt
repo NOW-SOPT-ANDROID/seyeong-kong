@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.ActivityMainBinding
 import com.sopt.now.ui.home.HomeFragment
 
@@ -37,6 +38,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation(navController: NavController) {
         binding.mainBnv.setupWithNavController(navController)
         hideBottomNavigationView(navController)
+
+        val userRepository = (application as SoptApp).appContainer.userRepository
+        if (userRepository.isUserLoggedIn()) {
+            navController.navigate(R.id.homeFragment)
+        } else {
+            navController.navigate(R.id.loginFragment)
+        }
     }
 
     private fun hideBottomNavigationView(navController: NavController) {
