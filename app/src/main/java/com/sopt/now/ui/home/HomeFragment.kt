@@ -17,7 +17,10 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
         get() = requireNotNull(_binding) { "FragmentHomeBinding is not initialized" }
-    private val viewModel by viewModels<HomeViewModel>()
+
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(requireActivity().application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +75,6 @@ class HomeFragment : Fragment() {
                 val description = descriptionEditText.text.toString()
                 if (name.isNotEmpty() && description.isNotEmpty()) {
                     val newFriend = Friend(
-                        id = viewModel.friends.value?.size ?: (0 + 1),
                         profileImg = R.drawable.ic_mypage,
                         name = name,
                         selfDescription = description
