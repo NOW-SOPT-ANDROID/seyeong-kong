@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.data.friend.Friend
 import com.sopt.now.databinding.FragmentHomeBinding
 
@@ -19,7 +20,8 @@ class HomeFragment : Fragment() {
         get() = requireNotNull(_binding) { "FragmentHomeBinding is not initialized" }
 
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(requireActivity().application)
+        val app = requireActivity().application as SoptApp
+        HomeViewModelFactory(app.appContainer.provideFriendsRepository())
     }
 
     override fun onCreateView(
