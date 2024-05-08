@@ -2,17 +2,30 @@ package com.sopt.now.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.SoptApp
+import com.sopt.now.data.User
+import com.sopt.now.data.UserRepository
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     val loginSuccess = MutableLiveData<Boolean>()
+    val userData = MutableLiveData<User?>()
+
+    init {
+        fetchUserData()
+    }
+
+    private fun fetchUserData() {
+        userData.value = userRepository.getUserData()
+    }
 
     fun login(id: String, pw: String) {
-        val user = SoptApp().appContainer.userRepository.getUserData()
-        if(user != null && id == user.id && pw == user.password) {
-            SoptApp().appContainer.userRepository.setUserLoggedIn(true)
-            loginSuccess.value = true
-        } else {
+        userData.value?.let {
+            if(id == it.id && pw == it.password) {
+                userRepository.setUserLoggedIn(true)
+                loginSuccess.value = true
+            } else {
+                loginSuccess.value = false
+            }
+        } ?: run {
             loginSuccess.value = false
         }
     }
