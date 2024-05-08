@@ -9,14 +9,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentSignupBinding
+import com.sopt.now.util.viewModelFactory
 
 class SignupFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding: FragmentSignupBinding
         get() = requireNotNull(_binding) { "FragmentSignupBinding is not initialized" }
-    private val viewModel: SignupViewModel by viewModels()
 
+    private val signupViewModel: SignupViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        viewModelFactory { SignupViewModel(app.appContainer.userRepository) }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,19 +45,19 @@ class SignupFragment : Fragment() {
                 val nickname = etNickname.text.toString()
                 val mbti = etMbti.text.toString()
 
-                viewModel.isValidFormData(id, pw, nickname, mbti)
+                signupViewModel.isValidFormData(id, pw, nickname, mbti)
             }
         }
     }
 
     private fun observeViewModel() {
-        viewModel.signupResult.observe(viewLifecycleOwner) { result ->
+        signupViewModel.signupResult.observe(viewLifecycleOwner) { result ->
             if (result) {
                 findNavController().navigate(R.id.action_signup_to_login)
             }
         }
 
-        viewModel.errorMsg.observe(viewLifecycleOwner) { errorMsg ->
+        signupViewModel.errorMsg.observe(viewLifecycleOwner) { errorMsg ->
             Snackbar.make(binding.root, errorMsg, Snackbar.LENGTH_SHORT).show()
         }
     }
