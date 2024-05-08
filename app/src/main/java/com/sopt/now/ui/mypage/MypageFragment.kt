@@ -8,13 +8,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentMypageBinding
+import com.sopt.now.util.viewModelFactory
 
 class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding: FragmentMypageBinding
         get() = requireNotNull(_binding) { "FragmentMypageBinding is not initialized" }
-    private val viewModel: MypageViewModel by viewModels()
+
+    private val mypageViewModel: MypageViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        viewModelFactory { MypageViewModel(app.appContainer.userRepository) }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +39,7 @@ class MypageFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+        mypageViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.tvId.text = it.id
                 binding.tvMbti.text = it.mbti
@@ -44,7 +50,7 @@ class MypageFragment : Fragment() {
 
     private fun initLogoutBtnClickListener() {
         binding.tvLogout.setOnClickListener {
-            viewModel.logout()
+            mypageViewModel.logout()
             findNavController().navigate(R.id.action_mypage_to_login)
         }
     }
