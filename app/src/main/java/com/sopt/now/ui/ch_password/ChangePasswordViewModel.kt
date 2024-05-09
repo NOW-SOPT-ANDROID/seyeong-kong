@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.Sopt
-import com.sopt.now.network.request.RequestChPwDto
+import com.sopt.now.network.request.RequestChangePwDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
@@ -13,11 +13,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChPasswordViewModel: ViewModel() {
+class ChangePasswordViewModel: ViewModel() {
     private val authService by lazy { ServicePool.authService }
-    val liveData = MutableLiveData<AuthState>()
+    val changePasswordStatus = MutableLiveData<AuthState>()
 
-    fun chPassword(request: RequestChPwDto) {
+    fun changePassword(request: RequestChangePwDto) {
         authService.chPassword(request).enqueue(object : Callback<ResponseDto> {
             override fun onResponse(
                 call: Call<ResponseDto>,
@@ -27,7 +27,7 @@ class ChPasswordViewModel: ViewModel() {
                     val data: ResponseDto? = response.body()
                     val memberId = response.headers()["location"]?: "unknown"
                     Sopt.userRepository.updateUserPassword(request.newPassword)
-                    liveData.value = AuthState(
+                    changePasswordStatus.value = AuthState(
                         isSuccess = true,
                         message = "비밀번호 변경 성공 유저의 ID는 $memberId 입니다."
                     )
@@ -36,7 +36,7 @@ class ChPasswordViewModel: ViewModel() {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
                     val error = JSONObject(rawJson).optString("message", "error message")
-                    liveData.value = AuthState(
+                    changePasswordStatus.value = AuthState(
                         isSuccess = false,
                         message = "비밀번호 변경 실패 $error"
                     )
@@ -45,7 +45,7 @@ class ChPasswordViewModel: ViewModel() {
             }
 
             override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
-                liveData.value = AuthState(
+                changePasswordStatus.value = AuthState(
                     isSuccess = false,
                     message = "서버 에러"
                 )

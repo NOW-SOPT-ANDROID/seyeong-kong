@@ -34,12 +34,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     }
 
     private fun observeViewModel() {
-        viewModel.liveData.observe(viewLifecycleOwner) { authState ->
-            if (authState.isSuccess) {
+        viewModel.loginStatus.observe(viewLifecycleOwner) { loginState ->
+            if (loginState.isSuccess) {
                 findNavController().navigate(R.id.action_login_to_home)
-                Snackbar.make(binding.root, authState.message, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, loginState.message, Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(binding.root, authState.message, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, loginState.message, Snackbar.LENGTH_SHORT).show()
             }
         }
     }

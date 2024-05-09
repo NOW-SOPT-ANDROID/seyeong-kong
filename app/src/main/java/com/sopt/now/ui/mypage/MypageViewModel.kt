@@ -13,7 +13,7 @@ import retrofit2.Response
 
 class MypageViewModel: ViewModel() {
     private val authService by lazy { ServicePool.authService }
-    val liveData = MutableLiveData<AuthState>()
+    val userInfoStatus = MutableLiveData<AuthState>()
     val userLiveData = MutableLiveData<UserInfo>()
 
     fun info() {
@@ -23,14 +23,14 @@ class MypageViewModel: ViewModel() {
                     response.body()?.data?.let {
                         userLiveData.postValue(it)
                     }
-                    liveData.value = AuthState(isSuccess = true, message = "회원 정보 조회 성공")
+                    userInfoStatus.value = AuthState(isSuccess = true, message = "회원 정보 조회 성공")
                 } else {
-                    liveData.value = AuthState(isSuccess = false, message = "회원 정보 조회 실패")
+                    userInfoStatus.value = AuthState(isSuccess = false, message = "회원 정보 조회 실패")
                 }
             }
 
             override fun onFailure(call: Call<ResponseInfoDto>, t: Throwable) {
-                liveData.value = AuthState(isSuccess = false, message = "서버 에러")
+                userInfoStatus.value = AuthState(isSuccess = false, message = "서버 에러")
             }
         })
     }

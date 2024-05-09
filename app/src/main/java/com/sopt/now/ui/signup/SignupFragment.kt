@@ -41,12 +41,12 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(
     }
 
     private fun observeViewModel() {
-        viewModel.liveData.observe(viewLifecycleOwner) { signUpState ->
-            if (signUpState.isSuccess) {
-                Snackbar.make(binding.root, signUpState.message, Snackbar.LENGTH_LONG).show()
+        viewModel.signupStatus.observe(viewLifecycleOwner) { signupState ->
+            if (signupState.isSuccess) {
+                Snackbar.make(binding.root, signupState.message, Snackbar.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_signup_to_login)
             } else {
-                Snackbar.make(binding.root, signUpState.message, Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, signupState.message, Snackbar.LENGTH_LONG).show()
             }
         }
     }
