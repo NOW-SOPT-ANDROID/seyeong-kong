@@ -2,7 +2,7 @@ package com.sopt.now.ui.login
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.Sopt
+import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestLoginDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val loginStatus = MutableLiveData<AuthState>()
     fun login(request: RequestLoginDto) {
@@ -38,8 +38,8 @@ class LoginViewModel : ViewModel() {
 
     private fun successResponse(response: Response<ResponseDto>) {
         val memberId = response.headers()["location"] ?: "unknown"
-        Sopt.userRepository.setUserLoggedIn(true)
-        Sopt.userRepository.setMemberId(memberId)
+        userRepository.setUserLoggedIn(true)
+        userRepository.setMemberId(memberId)
 
         loginStatus.value = AuthState(
             isSuccess = true,

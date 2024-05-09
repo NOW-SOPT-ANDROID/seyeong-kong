@@ -2,8 +2,8 @@ package com.sopt.now.ui.signup
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.Sopt
 import com.sopt.now.data.User
+import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SignupViewModel : ViewModel() {
+class SignupViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val signupStatus = MutableLiveData<AuthState>()
 
@@ -41,7 +41,7 @@ class SignupViewModel : ViewModel() {
     private fun successResponse(response: Response<ResponseDto>, request: RequestSignUpDto) {
         val memberId = response.headers()["location"] ?: "unknown"
         val user = User(request.authenticationId, request.password, request.nickname, request.phone)
-        Sopt.userRepository.saveUserData(user)
+        userRepository.saveUserData(user)
         signupStatus.value = AuthState(
             isSuccess = true,
             message = "회원가입 성공 유저의 ID는 $memberId 입니다."

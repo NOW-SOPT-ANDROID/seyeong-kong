@@ -1,4 +1,4 @@
-package com.sopt.now.data.Friend
+package com.sopt.now.data.friend
 
 import kotlinx.coroutines.flow.Flow
 

@@ -9,13 +9,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import com.sopt.now.R
-import com.sopt.now.data.Friend.Friend
+import com.sopt.now.SoptApp
+import com.sopt.now.data.friend.Friend
 import com.sopt.now.databinding.FragmentHomeBinding
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(
     FragmentHomeBinding::inflate
 ) {
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel: HomeViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        HomeViewModelFactory(app.appContainer.provideFriendsRepository())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +65,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
                 val description = descriptionEditText.text.toString()
                 if (name.isNotEmpty() && description.isNotEmpty()) {
                     val newFriend = Friend(
-                        id = viewModel.friends.value?.size ?: (0 + 1),
                         profileImg = R.drawable.ic_mypage,
                         name = name,
                         selfDescription = description

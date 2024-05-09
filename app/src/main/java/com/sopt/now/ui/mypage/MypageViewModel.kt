@@ -2,7 +2,7 @@ package com.sopt.now.ui.mypage
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.Sopt.Companion.userRepository
+import com.sopt.now.data.UserRepository
 import com.sopt.now.network.response.ResponseInfoDto
 import com.sopt.now.network.response.UserInfo
 import com.sopt.now.network.service.ServicePool
@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MypageViewModel: ViewModel() {
+class MypageViewModel(private val userRepository: UserRepository): ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val userInfoStatus = MutableLiveData<AuthState>()
     val userLiveData = MutableLiveData<UserInfo?>()

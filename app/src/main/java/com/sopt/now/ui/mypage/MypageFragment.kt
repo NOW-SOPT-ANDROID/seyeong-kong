@@ -6,25 +6,31 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentMypageBinding
+import com.sopt.now.util.viewModelFactory
 
 class MypageFragment : BaseFragment<FragmentMypageBinding> (
     FragmentMypageBinding::inflate
 ) {
-    private val viewModel: MypageViewModel by viewModels()
+
+    private val mypageViewModel: MypageViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        viewModelFactory { MypageViewModel(app.appContainer.userRepository) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.info()
-        observeViewModel()
+        mypageViewModel.info()
+        setupObservers()
         initLogoutBtnClickListener()
         initChPasswordBtnClickListener()
         initFollowerClickListener()
     }
 
-    private fun observeViewModel() {
-        viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+    private fun setupObservers() {
+        mypageViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.tvId.text = it.authenticationId
                 binding.tvNickname.text = it.nickname
@@ -35,7 +41,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding> (
 
     private fun initLogoutBtnClickListener() {
         binding.tvLogout.setOnClickListener {
-            viewModel.logout()
+            mypageViewModel.logout()
             findNavController().navigate(R.id.action_mypage_to_login)
         }
     }

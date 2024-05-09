@@ -2,7 +2,7 @@ package com.sopt.now.ui.change_password
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.Sopt
+import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestChangePasswordDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChangePasswordViewModel : ViewModel() {
+class ChangePasswordViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val changePasswordStatus = MutableLiveData<AuthState>()
 
@@ -42,7 +42,7 @@ class ChangePasswordViewModel : ViewModel() {
         request: RequestChangePasswordDto,
     ) {
         val memberId = response.headers()["location"] ?: "unknown"
-        Sopt.userRepository.updateUserPassword(request.newPassword)
+        userRepository.updateUserPassword(request.newPassword)
         changePasswordStatus.value = AuthState(
             isSuccess = true,
             message = "비밀번호 변경 성공 유저의 ID는 $memberId 입니다."

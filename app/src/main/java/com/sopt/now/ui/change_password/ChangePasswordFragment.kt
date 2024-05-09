@@ -7,13 +7,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentChangePasswordBinding
 import com.sopt.now.network.request.RequestChangePasswordDto
+import com.sopt.now.util.viewModelFactory
 
 class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
     FragmentChangePasswordBinding::inflate
 ) {
-    private val viewModel: ChangePasswordViewModel by viewModels()
+    private val changePasswordViewModel: ChangePasswordViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        viewModelFactory { ChangePasswordViewModel(app.appContainer.userRepository) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,7 +29,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
 
     private fun initChangePasswordButtonClickListener() {
         binding.btnChPw.setOnClickListener {
-            viewModel.changePassword(getChangePasswordDto())
+            changePasswordViewModel.changePassword(getChangePasswordDto())
         }
     }
 
@@ -40,7 +45,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
     }
 
     private fun observeViewModel() {
-        viewModel.changePasswordStatus.observe(viewLifecycleOwner) { changePwState ->
+        changePasswordViewModel.changePasswordStatus.observe(viewLifecycleOwner) { changePwState ->
             if (changePwState.isSuccess) {
                 Snackbar.make(binding.root, changePwState.message, Snackbar.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_changePassword_to_login)

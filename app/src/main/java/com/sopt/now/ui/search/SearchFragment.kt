@@ -1,24 +1,24 @@
 package com.sopt.now.ui.search
 
-import BaseFragment
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import com.google.gson.Gson
-import com.sopt.now.data.search.Repo
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.sopt.now.databinding.FragmentSearchBinding
-import java.io.IOException
-import java.nio.charset.StandardCharsets
 
-class SearchFragment : BaseFragment<FragmentSearchBinding> (
-    FragmentSearchBinding::inflate
-){
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = requireNotNull(_binding) { "FragmentSearchBinding is not initialized" }
+
+    private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var repoAdapter: RepoAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupAdapters()
-        loadJson()
+        setupObservers()
+        searchViewModel.loadJson(requireContext())
     }
 
     private fun setupAdapters() {
@@ -26,24 +26,15 @@ class SearchFragment : BaseFragment<FragmentSearchBinding> (
         binding.rvRepo.adapter = repoAdapter
     }
 
-    private fun loadJson() {
-        val fileName = "fake_repo_list.json"
-        try {
-            context?.assets?.open(fileName)?.use { inputStream ->
-                val json = inputStream.readBytes().toString(StandardCharsets.UTF_8)
-                parseJson(json)?.let { repoAdapter.submitList(it) }
-            }
-        } catch (e: IOException) {
-            Log.e("SearchFragment", "Error loadJson", e)
+    private fun setupObservers() {
+        searchViewModel.repoList.observe(viewLifecycleOwner) { repoList ->
+            repoAdapter.submitList(repoList)
         }
     }
 
-    private fun parseJson(jsonString: String): List<Repo>? {
-        return try {
-            Gson().fromJson(jsonString, Array<Repo>::class.java).toList()
-        } catch (e: Exception) {
-            Log.e("SearchFragment", "Error parseJson", e)
-            emptyList()
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        binding.rvRepo.adapter = null
     }
 }

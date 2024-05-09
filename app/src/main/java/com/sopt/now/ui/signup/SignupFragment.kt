@@ -7,14 +7,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
+import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentSignupBinding
 import com.sopt.now.network.request.RequestSignUpDto
+import com.sopt.now.util.viewModelFactory
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>(
     FragmentSignupBinding::inflate
-){
-    private val viewModel: SignupViewModel by viewModels()
+) {
 
+    private val signupViewModel: SignupViewModel by viewModels {
+        val app = requireActivity().application as SoptApp
+        viewModelFactory { SignupViewModel(app.appContainer.userRepository) }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSignupBtnClickListener()
@@ -23,7 +28,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(
 
     private fun initSignupBtnClickListener() {
         binding.btnSignup.setOnClickListener {
-            viewModel.signUp(getSignUpRequestDto())
+            signupViewModel.signUp(getSignUpRequestDto())
         }
     }
 
@@ -41,7 +46,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(
     }
 
     private fun observeViewModel() {
-        viewModel.signupStatus.observe(viewLifecycleOwner) { signupState ->
+        signupViewModel.signupStatus.observe(viewLifecycleOwner) { signupState ->
             if (signupState.isSuccess) {
                 Snackbar.make(binding.root, signupState.message, Snackbar.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_signup_to_login)
