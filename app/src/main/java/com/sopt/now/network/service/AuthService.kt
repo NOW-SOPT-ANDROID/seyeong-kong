@@ -23,7 +23,7 @@ interface AuthService {
     ): Call<ResponseDto>
 
     @PATCH("member/password")
-    fun chPassword(
+    fun changePassword(
         @Body request: RequestChangePwDto,
     ): Call<ResponseDto>
 
