@@ -1,6 +1,5 @@
 package com.sopt.now.ui.login
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.Sopt
@@ -23,23 +22,9 @@ class LoginViewModel : ViewModel() {
                 response: Response<ResponseDto>,
             ) {
                 if (response.isSuccessful) {
-                    val data: ResponseDto? = response.body()
-                    val memberId = response.headers()["location"]?: "unknown"
-                    Sopt.userRepository.setUserLoggedIn(true)
-                    Sopt.userRepository.setMemberId(memberId)
-                    loginStatus.value = AuthState(
-                        isSuccess = true,
-                        message = "로그인 성공 유저의 ID는 $memberId 입니다."
-                    )
-                    Log.d("Login", "data: $data, userId: $memberId")
+                    successResponse(response)
                 } else {
-                    val statusCode = response.code()
-                    val error = response.message()
-                    loginStatus.value = AuthState(
-                        isSuccess = false,
-                        message = "로그인 실패 $error"
-                    )
-                    Log.d("LoginViewModel", "로그인 실패: HTTP Status Code: $statusCode, Error: $error")
+                    failResponse(response)
                 }
             }
 
@@ -50,5 +35,23 @@ class LoginViewModel : ViewModel() {
                 )
             }
         })
+    }
+
+    private fun successResponse(response: Response<ResponseDto>) {
+        val memberId = response.headers()["location"] ?: "unknown"
+        Sopt.userRepository.setUserLoggedIn(true)
+        Sopt.userRepository.setMemberId(memberId)
+        loginStatus.value = AuthState(
+            isSuccess = true,
+            message = "로그인 성공 유저의 ID는 $memberId 입니다."
+        )
+    }
+
+    private fun failResponse(response: Response<ResponseDto>) {
+        val error = response.message()
+        loginStatus.value = AuthState(
+            isSuccess = false,
+            message = "로그인 실패 $error"
+        )
     }
 }
