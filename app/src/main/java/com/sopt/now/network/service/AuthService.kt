@@ -1,6 +1,6 @@
 package com.sopt.now.network.service
 
-import com.sopt.now.network.request.RequestChangePwDto
+import com.sopt.now.network.request.RequestChangePasswordDto
 import com.sopt.now.network.request.RequestLoginDto
 import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto
@@ -24,7 +24,7 @@ interface AuthService {
 
     @PATCH("member/password")
     fun changePassword(
-        @Body request: RequestChangePwDto,
+        @Body request: RequestChangePasswordDto,
     ): Call<ResponseDto>
 
     @GET("member/info")
