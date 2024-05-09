@@ -1,4 +1,4 @@
-package com.sopt.now.ui.ch_password
+package com.sopt.now.ui.change_password
 
 import BaseFragment
 import android.os.Bundle
@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
 import com.sopt.now.databinding.FragmentChangePasswordBinding
-import com.sopt.now.network.request.RequestChangePwDto
+import com.sopt.now.network.request.RequestChangePasswordDto
 
 class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
     FragmentChangePasswordBinding::inflate
@@ -18,17 +18,25 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initChangePwButtonClickListener()
+        initChangePasswordButtonClickListener()
         observeViewModel()
     }
 
-    private fun initChangePwButtonClickListener() {
+    private fun initChangePasswordButtonClickListener() {
         binding.btnChPw.setOnClickListener {
-            val pre = binding.etPrePw.text.toString()
-            val new = binding.etNewPw.text.toString()
-            val verify = binding.etVerifyPw.text.toString()
-            viewModel.changePassword(RequestChangePwDto(previousPassword = pre, newPassword = new, newPasswordVerification = verify))
+            viewModel.changePassword(getChangePasswordDto())
         }
+    }
+
+    private fun getChangePasswordDto() : RequestChangePasswordDto {
+        val previousPassword = binding.etPrePw.text.toString()
+        val newPassword = binding.etNewPw.text.toString()
+        val newPasswordVerification = binding.etVerifyPw.text.toString()
+        return RequestChangePasswordDto(
+            previousPassword = previousPassword,
+            newPassword = newPassword,
+            newPasswordVerification = newPasswordVerification
+        )
     }
 
     private fun observeViewModel() {
