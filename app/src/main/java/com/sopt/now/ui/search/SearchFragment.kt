@@ -1,32 +1,19 @@
 package com.sopt.now.ui.search
 
+import BaseFragment
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.sopt.now.data.search.Repo
 import com.sopt.now.databinding.FragmentSearchBinding
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
-class SearchFragment : Fragment() {
-    private var _binding: FragmentSearchBinding? = null
-    private val binding: FragmentSearchBinding
-        get() = requireNotNull(_binding) { "FragmentSearchBinding is not initialized" }
-
+class SearchFragment : BaseFragment<FragmentSearchBinding> (
+    FragmentSearchBinding::inflate
+){
     private lateinit var repoAdapter: RepoAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,10 +45,5 @@ class SearchFragment : Fragment() {
             Log.e("SearchFragment", "Error parseJson", e)
             emptyList()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -1,31 +1,19 @@
 package com.sopt.now.ui.signup
 
+import BaseFragment
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.databinding.FragmentSignupBinding
+import com.sopt.now.network.request.RequestSignUpDto
 
-class SignupFragment : Fragment() {
-    private var _binding: FragmentSignupBinding? = null
-    private val binding: FragmentSignupBinding
-        get() = requireNotNull(_binding) { "FragmentSignupBinding is not initialized" }
+class SignupFragment : BaseFragment<FragmentSignupBinding>(
+    FragmentSignupBinding::inflate
+){
     private val viewModel: SignupViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentSignupBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,10 +49,5 @@ class SignupFragment : Fragment() {
                 Snackbar.make(binding.root, signUpState.message, Snackbar.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

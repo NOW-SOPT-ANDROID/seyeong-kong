@@ -1,10 +1,8 @@
 package com.sopt.now.ui.ch_password
 
+import BaseFragment
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -12,20 +10,11 @@ import com.sopt.now.R
 import com.sopt.now.databinding.FragmentChPasswordBinding
 import com.sopt.now.network.request.RequestChPwDto
 
-class ChPasswordFragment : Fragment() {
-    private var _binding: FragmentChPasswordBinding? = null
-    private val binding: FragmentChPasswordBinding
-        get() = requireNotNull(_binding) { "FragmentChPasswordBinding is not initialized" }
+class ChangePasswordFragment : BaseFragment<FragmentChPasswordBinding> (
+    FragmentChPasswordBinding::inflate
+) {
     private val viewModel: ChPasswordViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentChPasswordBinding.inflate(inflater, container, false)
-        return binding.root
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,10 +40,5 @@ class ChPasswordFragment : Fragment() {
                 Snackbar.make(binding.root, chPwState.message, Snackbar.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
