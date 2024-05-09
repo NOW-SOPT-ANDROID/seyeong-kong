@@ -17,7 +17,7 @@ object ApiFactory {
     }
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HeaderInterceptor(Sopt.userRepository))
+        .addInterceptor(HeaderInterceptor(Sopt.instance, Sopt.userRepository))
         .addInterceptor(loggingInterceptor)
         .build()
 

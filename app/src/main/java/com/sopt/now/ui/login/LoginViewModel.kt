@@ -14,7 +14,6 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val loginStatus = MutableLiveData<AuthState>()
-
     fun login(request: RequestLoginDto) {
         authService.login(request).enqueue(object : Callback<ResponseDto> {
             override fun onResponse(
@@ -41,6 +40,7 @@ class LoginViewModel : ViewModel() {
         val memberId = response.headers()["location"] ?: "unknown"
         Sopt.userRepository.setUserLoggedIn(true)
         Sopt.userRepository.setMemberId(memberId)
+
         loginStatus.value = AuthState(
             isSuccess = true,
             message = "로그인 성공 유저의 ID는 $memberId 입니다."
