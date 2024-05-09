@@ -11,19 +11,17 @@
     <string name="signup_btn">회원가입 하기</string>
     <string name="signup_tv_nickname">닉네임</string>
     <string name="signup_et_nickname">닉네임을 입력해주세요</string>
-    <string name="signup_tv_mbti">MBTI</string>
-    <string name="signup_et_mbti">MBTI를 4글자로 입력해주세요</string>
-
-    <string name="id_greater_than">"아이디는 6글자 이상이어야 합니다."</string>
-    <string name="id_less_than">"아이디는 10글자 이하여야 합니다."</string>
-    <string name="pw_greater_than">"비밀번호는 8글자 이상이어야 합니다."</string>
-    <string name="pw_less_than">"비밀번호는 12글자 이하이어야 합니다."</string>
-    <string name="fail_login">아이디나 비밀번호가 잘못되었습니다.</string>
-    <string name="invalid_mbti">MBTI를 4글자로 입력해주세요.</string>
-    <string name="success_login">로그인 성공</string>
+    <string name="signup_tv_phone">핸드폰 번호</string>
+    <string name="signup_et_phone">010-****-****</string>
     <string name="login_tv_logout">로그아웃</string>
-    <string name="already_signup">이미 회원가입을 하셨습니다.</string>
-    <string name="not_signup">회원가입을 먼저 해주세요.</string>
+    <string name="login_tv_ch_password">비밀번호 변경</string>
+
+    <string name="ch_password_btn">비밀번호 변경하기</string>
+    <string name="ch_password_tv_pre">기존 비밀번호</string>
+    <string name="ch_password_et_pre">기존 비밀번호를 입력하세요.</string>
+    <string name="ch_password_tv_new">새로운 비밀번호</string>
+    <string name="ch_password_et_new">새로운 비밀번호를 입력하세요.</string>
+    <string name="ch_password_et_verify">새로운 비밀번호를 확인하세요.</string>
 
     <string name="bnv_home">홈</string>
     <string name="bnv_search">검색</string>
@@ -31,4 +29,7 @@
     <string name="home_name">이름</string>
     <string name="home_description">소개</string>
     <string name="fab_add">친구 추가 버튼</string>
+    <string name="follower">팔로워</string>
+    <string name="follower_name_format">%1$s %2$s</string>
+
 </resources>
