@@ -42,7 +42,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding> (
 
     private fun initChPasswordBtnClickListener() {
         binding.tvChPassword.setOnClickListener {
-            findNavController().navigate(R.id.action_mypage_to_chPassword)
+            findNavController().navigate(R.id.action_mypage_to_changePassword)
         }
     }
 

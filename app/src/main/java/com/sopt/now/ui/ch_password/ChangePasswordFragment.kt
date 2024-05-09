@@ -35,7 +35,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
         viewModel.changePasswordStatus.observe(viewLifecycleOwner) { changePwState ->
             if (changePwState.isSuccess) {
                 Snackbar.make(binding.root, changePwState.message, Snackbar.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_chPassword_to_login)
+                findNavController().navigate(R.id.action_changePassword_to_login)
             } else {
                 Snackbar.make(binding.root, changePwState.message, Snackbar.LENGTH_LONG).show()
             }

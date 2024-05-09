@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             binding.mainBnv.visibility = when (destination.id) {
                 R.id.loginFragment -> View.GONE
                 R.id.signupFragment -> View.GONE
-                R.id.chPasswordFragment -> View.GONE
+                R.id.changePasswordFragment -> View.GONE
                 R.id.followerFragment -> View.GONE
                 else -> View.VISIBLE
             }

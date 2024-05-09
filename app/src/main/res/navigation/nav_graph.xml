@@ -35,8 +35,8 @@
             android:id="@+id/action_mypage_to_login"
             app:destination="@id/loginFragment" />
         <action
-            android:id="@+id/action_mypage_to_chPassword"
-            app:destination="@id/chPasswordFragment" />
+            android:id="@+id/action_mypage_to_changePassword"
+            app:destination="@id/changePasswordFragment" />
         <action
             android:id="@+id/action_mypage_to_follower"
             app:destination="@id/followerFragment" />
@@ -53,11 +53,11 @@
         android:label="SearchFragment" />
 
     <fragment
-        android:id="@+id/chPasswordFragment"
-        android:name="com.sopt.now.ui.ch_password.ChPasswordFragment"
-        android:label="ChPasswordFragment" >
+        android:id="@+id/changePasswordFragment"
+        android:name="com.sopt.now.ui.ch_password.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" >
         <action
-            android:id="@+id/action_chPassword_to_login"
+            android:id="@+id/action_changePassword_to_login"
             app:destination="@id/loginFragment" />
     </fragment>
 
