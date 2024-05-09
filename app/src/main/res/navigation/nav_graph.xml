@@ -54,7 +54,7 @@
 
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="com.sopt.now.ui.ch_password.ChangePasswordFragment"
+        android:name="com.sopt.now.ui.change_password.ChangePasswordFragment"
         android:label="ChangePasswordFragment" >
         <action
             android:id="@+id/action_changePassword_to_login"
