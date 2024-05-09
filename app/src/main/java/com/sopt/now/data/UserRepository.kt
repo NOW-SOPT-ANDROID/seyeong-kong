@@ -1,6 +1,7 @@
 package com.sopt.now.data
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 class UserRepository(private val preferences: SharedPreferences) {
     fun setUserLoggedIn(loggedIn: Boolean) {
@@ -24,14 +25,14 @@ class UserRepository(private val preferences: SharedPreferences) {
     }
 
     fun saveUserData(user: User) {
-        preferences.edit().apply {
+        preferences.edit {
             putString(KEY_USER_ID, user.id)
             putString(KEY_USER_PW, user.password)
             putString(KEY_NICKNAME, user.nickname)
             putString(KEY_PHONE, user.phone)
-            apply()
         }
     }
+
 
     fun updateUserPassword(newPassword: String) {
         preferences.edit().putString(KEY_USER_PW, newPassword).apply()
