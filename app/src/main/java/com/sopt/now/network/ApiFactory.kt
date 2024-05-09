@@ -2,6 +2,7 @@ package com.sopt.now.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.now.BuildConfig
+import com.sopt.now.SoptApp
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -16,7 +17,7 @@ object ApiFactory {
     }
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HeaderInterceptor(Sopt.instance))
+        .addInterceptor(HeaderInterceptor(SoptApp.applicationContext()))
         .addInterceptor(loggingInterceptor)
         .build()
 
