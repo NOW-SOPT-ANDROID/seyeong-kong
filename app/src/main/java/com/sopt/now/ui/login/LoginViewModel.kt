@@ -8,7 +8,6 @@ import com.sopt.now.network.request.RequestLoginDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,8 +34,7 @@ class LoginViewModel : ViewModel() {
                     Log.d("Login", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
-                    val rawJson = response.errorBody()?.string() ?: "No error message provided"
-                    val error = JSONObject(rawJson).optString("message", "error message")
+                    val error = response.message()
                     loginStatus.value = AuthState(
                         isSuccess = false,
                         message = "로그인 실패 $error"

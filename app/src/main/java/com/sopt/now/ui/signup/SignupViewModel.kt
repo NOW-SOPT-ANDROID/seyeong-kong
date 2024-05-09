@@ -9,7 +9,6 @@ import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,8 +35,7 @@ class SignupViewModel: ViewModel() {
                     Log.d("SignUp", "data: $data, userId: $memberId")
                 } else {
                     val statusCode = response.code()
-                    val rawJson = response.errorBody()?.string() ?: "No error message provided"
-                    val error = JSONObject(rawJson).optString("message", "error message")
+                    val error = response.message()
                     signupStatus.value = AuthState(
                         isSuccess = false,
                         message = "회원가입 실패 $error"
