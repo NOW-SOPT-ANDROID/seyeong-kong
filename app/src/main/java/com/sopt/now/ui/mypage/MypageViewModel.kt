@@ -11,14 +11,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MypageViewModel: ViewModel() {
+class MypageViewModel : ViewModel() {
     private val authService by lazy { ServicePool.authService }
     val userInfoStatus = MutableLiveData<AuthState>()
     val userLiveData = MutableLiveData<UserInfo>()
 
     fun info() {
         authService.info().enqueue(object : Callback<ResponseInfoDto> {
-            override fun onResponse(call: Call<ResponseInfoDto>, response: Response<ResponseInfoDto>) {
+            override fun onResponse(
+                call: Call<ResponseInfoDto>,
+                response: Response<ResponseInfoDto>,
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.data?.let {
                         userLiveData.postValue(it)
