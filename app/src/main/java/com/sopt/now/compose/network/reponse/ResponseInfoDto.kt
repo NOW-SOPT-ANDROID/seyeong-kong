@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResponseInfoDto (
-    @SerialName("Int")
+    @SerialName("code")
     val code: Int,
     @SerialName("message")
     val message: String,
