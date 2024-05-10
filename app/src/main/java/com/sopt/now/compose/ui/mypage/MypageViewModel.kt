@@ -1,5 +1,6 @@
 package com.sopt.now.compose.ui.mypage
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sopt.now.compose.SoptApp.Companion.userRepository
@@ -13,10 +14,16 @@ import retrofit2.Response
 
 class MypageViewModel : ViewModel() {
     private val authService by lazy { ServicePool.authService }
-    val liveData = MutableLiveData<AuthState>()
-    val userLiveData = MutableLiveData<UserInfo>()
 
-    fun info() {
+    private val _mypageStatus = MutableLiveData<AuthState>()
+    private val _userLiveData = MutableLiveData<UserInfo>()
+    private val _successLogout = MutableLiveData<Boolean?>(null)
+
+    val mypageStatus: LiveData<AuthState> = _mypageStatus
+    val userLiveData: LiveData<UserInfo> = _userLiveData
+    val successLogout: LiveData<Boolean?> = _successLogout
+
+    fun userInfo() {
         authService.info().enqueue(object : Callback<ResponseInfoDto> {
             override fun onResponse(
                 call: Call<ResponseInfoDto>,
@@ -24,21 +31,26 @@ class MypageViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.data?.let {
-                        userLiveData.postValue(it)
+                        _userLiveData.setValue(it)
                     }
-                    liveData.value = AuthState(isSuccess = true, message = "회원 정보 조회 성공")
+                    _mypageStatus.value = AuthState(isSuccess = true, message = "회원 정보 조회 성공")
                 } else {
-                    liveData.value = AuthState(isSuccess = false, message = "회원 정보 조회 실패")
+                    _mypageStatus.value = AuthState(isSuccess = false, message = "회원 정보 조회 실패")
                 }
             }
 
             override fun onFailure(call: Call<ResponseInfoDto>, t: Throwable) {
-                liveData.value = AuthState(isSuccess = false, message = "서버 에러")
+                _mypageStatus.value = AuthState(isSuccess = false, message = "서버 에러")
             }
         })
     }
 
     fun logout() {
-        userRepository.logoutUser()
+        if (userRepository.logoutUser()) {
+            userRepository.setUserLoggedIn(false)
+            _successLogout.value = true
+        } else {
+            _successLogout.value = false
+        }
     }
 }

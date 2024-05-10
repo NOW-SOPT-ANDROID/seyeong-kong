@@ -30,8 +30,9 @@ import com.sopt.now.compose.R
 @Composable
 fun MypageScreen(navController: NavController) {
     val viewModel: MypageViewModel = viewModel()
-    val authState by viewModel.liveData.observeAsState()
+    val authState by viewModel.mypageStatus.observeAsState()
     val userState by viewModel.userLiveData.observeAsState()
+    val successLogout by viewModel.successLogout.observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(authState) {
@@ -44,9 +45,23 @@ fun MypageScreen(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        viewModel.info()
+        viewModel.userInfo()
     }
 
+    LaunchedEffect(successLogout) {
+        successLogout?.let { success ->
+            if (success) {
+                navController.navigate("login") {
+                    popUpTo("mypage") { inclusive = true }
+                }
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = "로그아웃 실패",
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -132,8 +147,7 @@ fun MypageScreen(navController: NavController) {
                         end.linkTo(parent.end)
                     },
                     onClick = {
-                        navController.navigate("chPassword")
-                        {
+                        navController.navigate("changePassword") {
                             popUpTo("mypage") { inclusive = true }
                         }
                     },
@@ -153,10 +167,6 @@ fun MypageScreen(navController: NavController) {
                     },
                     onClick = {
                         viewModel.logout()
-                        navController.navigate("login")
-                        {
-                            popUpTo("mypage") { inclusive = true }
-                        }
                     },
                 ) {
                     Text(

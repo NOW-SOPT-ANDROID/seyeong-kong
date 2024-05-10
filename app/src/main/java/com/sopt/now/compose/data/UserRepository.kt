@@ -11,14 +11,6 @@ class UserRepository(private val preferences: SharedPreferences) {
         return preferences.getBoolean("isLoggedIn", false)
     }
 
-    fun getUserData(): User? {
-        val userId = preferences.getString(KEY_USER_ID, null) ?: return null
-        val password = preferences.getString(KEY_USER_PW, null) ?: return null
-        val nickname = preferences.getString(KEY_NICKNAME, null) ?: return null
-        val phone = preferences.getString(KEY_PHONE, null) ?: return null
-        return User(userId, password, nickname, phone)
-    }
-
     fun saveUserData(user: User) {
         preferences.edit().apply {
             putString(KEY_USER_ID, user.id)
@@ -29,9 +21,10 @@ class UserRepository(private val preferences: SharedPreferences) {
         }
     }
 
-    fun logoutUser() {
-        preferences.edit().clear().apply()
+    fun logoutUser(): Boolean {
+        return preferences.edit().clear().commit()
     }
+
 
     fun updateUserPassword(newPassword: String) {
         preferences.edit().putString(KEY_USER_PW, newPassword).apply()
