@@ -1,4 +1,4 @@
-package com.sopt.now.compose.ui.ch_password
+package com.sopt.now.compose.ui.change_password
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,11 +42,11 @@ fun ChangePasswordScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val viewModel:ChangePasswordViewModel = viewModel()
 
-    var prePw by remember { mutableStateOf("") }
-    var newPw by remember { mutableStateOf("") }
-    var verifyPw by remember { mutableStateOf("") }
+    var prePassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var verifyPassword by remember { mutableStateOf("") }
 
-    val authState by viewModel.liveData.observeAsState()
+    val authState by viewModel.changePasswordStatus.observeAsState()
 
     LaunchedEffect(authState) {
         authState?.let { state ->
@@ -57,7 +56,7 @@ fun ChangePasswordScreen(navController: NavController) {
             )
             if (state.isSuccess) {
                 navController.navigate("login") {
-                    popUpTo("chPassword") { inclusive = true }
+                    popUpTo("changePassword") { inclusive = true }
                 }
             }
         }
@@ -65,7 +64,6 @@ fun ChangePasswordScreen(navController: NavController) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {}
     ) { innerPadding ->
         Column(
@@ -82,8 +80,8 @@ fun ChangePasswordScreen(navController: NavController) {
 
             Spacer(Modifier.height(20.dp))
             OutlinedTextField(
-                value = prePw,
-                onValueChange = { prePw = it },
+                value = prePassword,
+                onValueChange = { prePassword = it },
                 label = { Text(stringResource(R.string.pre_pw)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -96,8 +94,8 @@ fun ChangePasswordScreen(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = newPw,
-                onValueChange = { newPw = it },
+                value = newPassword,
+                onValueChange = { newPassword = it },
                 label = { Text(stringResource(R.string.new_pw)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -110,8 +108,8 @@ fun ChangePasswordScreen(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = verifyPw,
-                onValueChange = { verifyPw = it },
+                value = verifyPassword,
+                onValueChange = { verifyPassword = it },
                 label = { Text(stringResource(R.string.verify_pw)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -123,10 +121,10 @@ fun ChangePasswordScreen(navController: NavController) {
             )
 
             Spacer(modifier = Modifier.weight(1f))
-            CustomBtn(
+            NoRippleButton(
                 text = stringResource(R.string.btn_ch_pw),
                 onClick = {
-                    viewModel.chPassword(RequestChangePasswordDto(prePw, newPw, verifyPw))
+                    viewModel.changePassword(RequestChangePasswordDto(prePassword, newPassword, verifyPassword))
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -135,7 +133,7 @@ fun ChangePasswordScreen(navController: NavController) {
 }
 
 @Composable
-fun CustomBtn(
+fun NoRippleButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -145,7 +143,7 @@ fun CustomBtn(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(30.dp)
             )
             .noRippleClickable(onClick = onClick)
