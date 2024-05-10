@@ -37,26 +37,33 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    val user = SoptApp.userRepository.getUserData()
-    var inputId by remember { mutableStateOf(user?.id ?: "") }
-    var inputPw by remember { mutableStateOf(user?.password ?: "") }
-    var isLoginAttempted by remember { mutableStateOf(false) }
+    var inputId by remember { mutableStateOf("") }
+    var inputPw by remember { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val viewModel: LoginViewModel = viewModel()
-    val authState by viewModel.liveData.observeAsState()
+    val authState by viewModel.loginStatus.observeAsState()
 
     LaunchedEffect(authState) {
         authState?.let { state ->
-            snackbarHostState.showSnackbar(
-                message = state.message,
-                duration = SnackbarDuration.Short
-            )
+            if (state.isSuccess) {
+                snackbarHostState.showSnackbar(
+                    message = "로그인 성공! 홈 화면으로 이동합니다.",
+                    duration = SnackbarDuration.Short
+                )
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = state.message,
+                    duration = SnackbarDuration.Short
+                )
+            }
         }
     }
 
@@ -117,21 +124,12 @@ fun LoginScreen(navController: NavController) {
                 text = stringResource(R.string.btn_login),
                 onClick = {
                     viewModel.login(RequestLoginDto(inputId, inputPw))
-                    isLoginAttempted = true
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
 
-        }
-    }
-
-    if (isLoginAttempted && authState?.isSuccess == true) {
-        LaunchedEffect(authState) {
-            navController.navigate("home") {
-                popUpTo("login") { inclusive = true }
-            }
         }
     }
 }

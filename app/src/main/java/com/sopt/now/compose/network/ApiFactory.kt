@@ -2,7 +2,7 @@ package com.sopt.now.compose.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.now.compose.BuildConfig
-import com.sopt.now.compose.SoptApp
+import com.sopt.now.compose.SoptApp.Companion.userRepository
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ object ApiFactory {
     private const val BASE_URL: String = BuildConfig.AUTH_BASE_URL
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HeaderInterceptor(SoptApp.userRepository))
+        .addInterceptor(HeaderInterceptor(userRepository))
         .build()
 
     val retrofit: Retrofit by lazy {

@@ -48,7 +48,7 @@ fun SignupScreen(navController: NavController) {
     var nickname by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
 
-    val authState by viewModel.liveData.observeAsState()
+    val authState by viewModel.signupStatus.observeAsState()
 
     LaunchedEffect(authState) {
         authState?.let { state ->

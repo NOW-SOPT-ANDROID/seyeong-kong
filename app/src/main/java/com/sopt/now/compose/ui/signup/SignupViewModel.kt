@@ -1,9 +1,10 @@
 package com.sopt.now.compose.ui.signup
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sopt.now.compose.SoptApp
+import com.sopt.now.compose.SoptApp.Companion.userRepository
 import com.sopt.now.compose.data.User
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.network.reponse.ResponseDto
@@ -16,7 +17,9 @@ import retrofit2.Response
 
 class SignupViewModel : ViewModel() {
     private val authService by lazy { ServicePool.authService }
-    val liveData = MutableLiveData<AuthState>()
+
+    private val _signupStatus = MutableLiveData<AuthState>()
+    val signupStatus: LiveData<AuthState> = _signupStatus
 
     fun signUp(request: RequestSignUpDto) {
         authService.signUp(request).enqueue(object : Callback<ResponseDto> {
@@ -33,8 +36,8 @@ class SignupViewModel : ViewModel() {
                         request.nickname,
                         request.phone
                     )
-                    SoptApp.userRepository.saveUserData(user)
-                    liveData.value = AuthState(
+                    userRepository.saveUserData(user)
+                    _signupStatus.value = AuthState(
                         isSuccess = true,
                         message = "회원가입 성공 유저의 ID는 $memberId 입니다."
                     )
@@ -43,7 +46,7 @@ class SignupViewModel : ViewModel() {
                     val statusCode = response.code()
                     val rawJson = response.errorBody()?.string() ?: "No error message provided"
                     val error = JSONObject(rawJson).optString("message", "error message")
-                    liveData.value = AuthState(
+                    _signupStatus.value = AuthState(
                         isSuccess = false,
                         message = "회원가입 실패 $error"
                     )
@@ -52,7 +55,7 @@ class SignupViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
-                liveData.value = AuthState(
+                _signupStatus.value = AuthState(
                     isSuccess = false,
                     message = "서버 에러"
                 )
