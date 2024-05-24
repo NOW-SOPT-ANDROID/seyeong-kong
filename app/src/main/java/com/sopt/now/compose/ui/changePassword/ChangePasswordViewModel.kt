@@ -1,4 +1,4 @@
-package com.sopt.now.compose.ui.change_password
+package com.sopt.now.compose.ui.changePassword
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

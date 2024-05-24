@@ -3,7 +3,7 @@ package com.sopt.now.compose.ui.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.sopt.now.compose.ui.change_password.ChangePasswordScreen
+import com.sopt.now.compose.ui.changePassword.ChangePasswordScreen
 import com.sopt.now.compose.ui.follower.FollowerScreen
 import com.sopt.now.compose.ui.home.HomeScreen
 import com.sopt.now.compose.ui.login.LoginScreen

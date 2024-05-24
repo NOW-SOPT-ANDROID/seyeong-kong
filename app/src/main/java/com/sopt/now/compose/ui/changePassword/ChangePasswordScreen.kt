@@ -1,4 +1,4 @@
-package com.sopt.now.compose.ui.change_password
+package com.sopt.now.compose.ui.changePassword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
