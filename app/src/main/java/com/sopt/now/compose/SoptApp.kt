@@ -16,4 +16,5 @@ class SoptApp: Application() {
         lateinit var preferenceInstance: SharedPreferences
         lateinit var userRepository: UserRepository
     }
+    //고칠께욥ㅎㅎ
 }
