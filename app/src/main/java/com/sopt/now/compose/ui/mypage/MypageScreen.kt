@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -17,13 +23,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.data.User
-import com.sopt.now.compose.data.UserRepository
 
 @Composable
-fun MypageScreen(navController: NavController, userRepository: UserRepository, user: User?) {
+fun MypageScreen(navController: NavController) {
+    val viewModel: MypageViewModel = viewModel()
+    val authState by viewModel.mypageStatus.observeAsState()
+    val userState by viewModel.userLiveData.observeAsState()
+    val successLogout by viewModel.successLogout.observeAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(authState) {
+        authState?.let { state ->
+            snackbarHostState.showSnackbar(
+                message = state.message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.userInfo()
+    }
+
+    LaunchedEffect(successLogout) {
+        successLogout?.let { success ->
+            if (success) {
+                navController.navigate("login") {
+                    popUpTo("mypage") { inclusive = true }
+                }
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = "로그아웃 실패",
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { padding ->
@@ -33,9 +72,9 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                 .padding(padding)
                 .padding(horizontal = 16.dp),
         ) {
-            val (userImg, userNickname, userMbti, userId, logout) = createRefs()
+            val (userImg, userNickname, follower, userPhone, userId, chPw, logout) = createRefs()
 
-            user?.let { user ->
+            userState?.let { user ->
                 Image(
                     modifier = Modifier
                         .constrainAs(userImg) {
@@ -59,15 +98,26 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                     fontWeight = FontWeight.Bold
                 )
 
-                Text(
-                    modifier = Modifier.constrainAs(userMbti) {
+                TextButton(
+                    modifier = Modifier.constrainAs(follower) {
                         top.linkTo(userNickname.top)
+                        start.linkTo(userNickname.end, margin = 8.dp)
                         bottom.linkTo(userNickname.bottom)
-                        start.linkTo(userNickname.end, margin = 7.dp)
                     },
-                    text = user.mbti,
-                    fontSize = 20.sp,
-                )
+                    onClick = {
+                        navController.navigate("follower")
+                        {
+                            popUpTo("mypage") { inclusive = true }
+                        }
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.btn_follower),
+                        fontSize = 20.sp,
+                        color = Color.DarkGray
+                    )
+                }
+
 
                 Text(
                     modifier = Modifier.constrainAs(userId) {
@@ -75,22 +125,48 @@ fun MypageScreen(navController: NavController, userRepository: UserRepository, u
                         start.linkTo(userNickname.start)
                         end.linkTo(userNickname.end)
                     },
-                    text = user.id,
+                    text = user.authenticationId,
                     fontSize = 20.sp
                 )
 
+                Text(
+                    modifier = Modifier.constrainAs(userPhone) {
+                        top.linkTo(userId.bottom, margin = 5.dp)
+                        bottom.linkTo(logout.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    text = user.phone,
+                    fontSize = 20.sp,
+                )
+
                 TextButton(
-                    modifier = Modifier.constrainAs(logout) {
-                        top.linkTo(userId.bottom, margin = 10.dp)
-                        start.linkTo(userId.start)
-                        end.linkTo(userId.end)
+                    modifier = Modifier.constrainAs(chPw) {
+                        top.linkTo(userPhone.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     },
                     onClick = {
-                        userRepository.clearUserData()
-                        navController.navigate("login")
-                        {
+                        navController.navigate("changePassword") {
                             popUpTo("mypage") { inclusive = true }
                         }
+                    },
+                ) {
+                    Text(
+                        text = stringResource(R.string.ch_pw),
+                        fontSize = 20.sp,
+                        color = Color.DarkGray
+                    )
+                }
+
+                TextButton(
+                    modifier = Modifier.constrainAs(logout) {
+                        top.linkTo(chPw.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    onClick = {
+                        viewModel.logout()
                     },
                 ) {
                     Text(

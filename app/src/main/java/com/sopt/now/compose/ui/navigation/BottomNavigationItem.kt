@@ -1,4 +1,4 @@
-package com.sopt.now.compose.ui.main
+package com.sopt.now.compose.ui.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar

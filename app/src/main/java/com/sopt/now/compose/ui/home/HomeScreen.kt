@@ -1,5 +1,7 @@
 package com.sopt.now.compose.ui.home
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +15,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -114,10 +122,22 @@ fun UserProfileItem(profile: Profile) {
 
 @Composable
 fun FriendProfileItem(friend: Friend) {
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
+    val fadeInAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.3f,
+        animationSpec = tween(durationMillis = 500), label = ""
+    )
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp, horizontal = 5.dp)
+            .alpha(fadeInAlpha)
     ) {
         val (friendIcon, friendName, friendDes) = createRefs()
         Icon(
