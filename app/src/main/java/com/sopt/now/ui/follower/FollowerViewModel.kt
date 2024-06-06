@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sopt.now.network.response.ResponseFollowerDto
 import com.sopt.now.network.service.ServicePool
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class FollowerViewModel : ViewModel() {
@@ -15,23 +15,24 @@ class FollowerViewModel : ViewModel() {
     val followers: LiveData<List<ResponseFollowerDto.Data>> get() = _followers
 
     fun loadFollowers() {
-        ServicePool.followerService.getFollowers(2).enqueue(object : Callback<ResponseFollowerDto> {
-            override fun onResponse(
-                call: Call<ResponseFollowerDto>,
-                response: Response<ResponseFollowerDto>,
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.data?.let { followers ->
-                        _followers.value = followers
-                    }
-                } else {
-                    Log.e("FollowerViewModel", "Failed to fetch followers")
-                }
+        viewModelScope.launch {
+            runCatching {
+                ServicePool.followerService.getFollowers(2)
+            }.onSuccess { response ->
+                handleSuccess(response)
+            }.onFailure {t ->
+                Log.e("FollowerViewModel", "서버 에러", t)
             }
+        }
+    }
 
-            override fun onFailure(call: Call<ResponseFollowerDto>, t: Throwable) {
-                Log.e("FollowerViewModel", "Error fetching followers", t)
+    private fun handleSuccess(response: Response<ResponseFollowerDto>) {
+        if (response.isSuccessful) {
+            response.body()?.data?.let { followers ->
+                _followers.value = followers
             }
-        })
+        } else {
+            Log.e("FollowerViewModel", "Failed to fetch followers")
+        }
     }
 }
