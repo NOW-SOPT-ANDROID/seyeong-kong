@@ -17,14 +17,12 @@ class FollowerFragment : Fragment() {
     private lateinit var followerAdapter: FollowerAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentFollowerBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding?.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +45,7 @@ class FollowerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.rvFollower?.adapter = null
         _binding = null
-        binding.rvFollower.adapter = null
     }
 }
