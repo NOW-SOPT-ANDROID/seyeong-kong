@@ -6,19 +6,19 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestChangePasswordDto
 import com.sopt.now.network.response.ResponseDto
-import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ChangePasswordViewModel(private val userRepository: UserRepository) : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
+class ChangePasswordViewModel(
+    private val userRepository: UserRepository,
+) : ViewModel() {
     val changePasswordStatus = MutableLiveData<AuthState>()
 
     fun changePassword(request: RequestChangePasswordDto) {
         viewModelScope.launch {
             runCatching {
-                authService.changePassword(request)
+                userRepository.changePassword(request)
             }.onSuccess { response ->
                 handleSuccess(response, request)
             }.onFailure {

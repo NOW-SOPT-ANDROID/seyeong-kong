@@ -10,14 +10,13 @@ import com.sopt.now.R
 import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentChangePasswordBinding
 import com.sopt.now.network.request.RequestChangePasswordDto
-import com.sopt.now.util.viewModelFactory
 
-class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
+class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
     FragmentChangePasswordBinding::inflate
 ) {
     private val changePasswordViewModel: ChangePasswordViewModel by viewModels {
         val app = requireActivity().application as SoptApp
-        viewModelFactory { ChangePasswordViewModel(app.appContainer.userRepository) }
+        app.serviceLocator.appViewModelFactory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding> (
         }
     }
 
-    private fun getChangePasswordDto() : RequestChangePasswordDto {
+    private fun getChangePasswordDto(): RequestChangePasswordDto {
         val previousPassword = binding.etPrePw.text.toString()
         val newPassword = binding.etNewPw.text.toString()
         val newPasswordVerification = binding.etVerifyPw.text.toString()
