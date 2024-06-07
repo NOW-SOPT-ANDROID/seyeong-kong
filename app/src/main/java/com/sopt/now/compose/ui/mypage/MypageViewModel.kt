@@ -15,8 +15,6 @@ import retrofit2.Response
 class MypageViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel(){
-    private val authService by lazy { ServicePool.authService }
-
     private val _userInfoStatus = MutableLiveData<AuthState>()
     private val _userLiveData = MutableLiveData<UserInfo>()
     private val _successLogout = MutableLiveData<Boolean?>(null)
@@ -28,7 +26,7 @@ class MypageViewModel(
     fun fetchUserInfo() {
         viewModelScope.launch {
             runCatching {
-                authService.userInfo()
+                userRepository.getUserInfo()
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {

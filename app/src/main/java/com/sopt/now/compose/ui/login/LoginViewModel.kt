@@ -15,15 +15,13 @@ import retrofit2.Response
 class LoginViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
-
     private val _loginStatus = MutableLiveData<AuthState>()
     val loginStatus: LiveData<AuthState> = _loginStatus
 
     fun login(request: RequestLoginDto) {
         viewModelScope.launch {
             runCatching {
-                authService.login(request)
+                userRepository.login(request)
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {

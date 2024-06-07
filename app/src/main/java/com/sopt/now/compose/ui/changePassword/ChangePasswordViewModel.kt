@@ -1,10 +1,10 @@
 package com.sopt.now.compose.ui.changePassword
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.request.RequestChangePasswordDto
 import com.sopt.now.compose.ui.AuthState
@@ -14,17 +14,17 @@ import retrofit2.Response
 class ChangePasswordViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel()  {
-    private val authService by lazy { ServicePool.authService }
-    val changePasswordStatus = MutableLiveData<AuthState>()
+    private val _changePasswordStatus = MutableLiveData<AuthState>()
+    val changePasswordStatus: LiveData<AuthState> = _changePasswordStatus
 
     fun changePassword(request: RequestChangePasswordDto) {
         viewModelScope.launch {
             runCatching {
-                authService.changePassword(request)
+                userRepository.changePassword(request)
             }.onSuccess { response ->
                 handleSuccess(response, request)
             }.onFailure {
-                changePasswordStatus.value = AuthState(
+                _changePasswordStatus.value = AuthState(
                     isSuccess = false,
                     message = "서버 에러"
                 )
@@ -49,7 +49,7 @@ class ChangePasswordViewModel(
     ) {
         val memberId = response.headers()["location"] ?: "unknown"
         userRepository.updateUserPassword(request.newPassword)
-        changePasswordStatus.value = AuthState(
+        _changePasswordStatus.value = AuthState(
             isSuccess = true,
             message = "비밀번호 변경 성공 유저의 ID는 $memberId 입니다."
         )
@@ -57,7 +57,7 @@ class ChangePasswordViewModel(
 
     private fun failResponse(response: Response<ResponseDto>) {
         val error = response.message()
-        changePasswordStatus.value = AuthState(
+        _changePasswordStatus.value = AuthState(
             isSuccess = false,
             message = "비밀번호 변경 실패 $error"
         )

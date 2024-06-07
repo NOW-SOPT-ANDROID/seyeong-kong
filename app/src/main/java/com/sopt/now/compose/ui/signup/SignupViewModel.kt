@@ -8,7 +8,6 @@ import com.sopt.now.compose.data.User
 import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.network.reponse.ResponseDto
-import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -16,15 +15,13 @@ import retrofit2.Response
 class SignupViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
-
     private val _signupStatus = MutableLiveData<AuthState>()
     val signupStatus: LiveData<AuthState> = _signupStatus
 
     fun signUp(request: RequestSignUpDto) {
         viewModelScope.launch {
             runCatching {
-                authService.signUp(request)
+                userRepository.signUp(request)
             }.onSuccess { response ->
                 handleSuccess(response, request)
             }.onFailure {
