@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.now.compose.SoptApp.Companion.userRepository
+import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.request.RequestLoginDto
@@ -12,8 +12,9 @@ import com.sopt.now.compose.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class LoginViewModel : ViewModel() {
-
+class LoginViewModel(
+    private val userRepository: UserRepository,
+) : ViewModel() {
     private val authService by lazy { ServicePool.authService }
 
     private val _loginStatus = MutableLiveData<AuthState>()
@@ -26,7 +27,7 @@ class LoginViewModel : ViewModel() {
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {
-                _loginStatus.value = AuthState (
+                _loginStatus.value = AuthState(
                     isSuccess = false,
                     message = "서버 에러"
                 )
@@ -41,6 +42,7 @@ class LoginViewModel : ViewModel() {
             failResponse(response)
         }
     }
+
     private fun successResponse(response: Response<ResponseDto>) {
         val memberId = response.headers()["location"] ?: "unknown"
         userRepository.setUserLoggedIn(true)
