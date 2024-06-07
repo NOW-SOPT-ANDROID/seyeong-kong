@@ -1,6 +1,7 @@
 package com.sopt.now.compose.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sopt.now.compose.SoptApp
@@ -9,7 +10,8 @@ import com.sopt.now.compose.SoptApp
 fun NavGraph(
     navController: NavHostController
 ) {
-    val startDestination = if (SoptApp.userRepository.isUserLoggedIn()) {
+    val userRepository = remember { SoptApp.serviceLocatorInstance.userRepository }
+    val startDestination = if (userRepository.isUserLoggedIn()) {
         "home"
     } else {
         "login"
@@ -20,4 +22,3 @@ fun NavGraph(
         )
     }
 }
-
