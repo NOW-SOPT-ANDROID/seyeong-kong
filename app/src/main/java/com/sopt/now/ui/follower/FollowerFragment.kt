@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sopt.now.databinding.FragmentFollowerBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FollowerFragment : Fragment() {
     private var _binding: FragmentFollowerBinding? = null
     private val binding: FragmentFollowerBinding
         get() = requireNotNull(_binding) { "FragmentFollowerBinding is not initialized" }
 
     private val viewModel: FollowerViewModel by viewModels()
-    private lateinit var followerAdapter: FollowerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,13 +34,13 @@ class FollowerFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        followerAdapter = FollowerAdapter(requireContext())
+        val followerAdapter = FollowerAdapter(requireContext())
         binding.rvFollower.adapter = followerAdapter
     }
 
     private fun observeViewModel() {
         viewModel.followers.observe(viewLifecycleOwner) { followers ->
-            followerAdapter.submitList(followers)
+            (binding.rvFollower.adapter as FollowerAdapter).submitList(followers)
         }
     }
 

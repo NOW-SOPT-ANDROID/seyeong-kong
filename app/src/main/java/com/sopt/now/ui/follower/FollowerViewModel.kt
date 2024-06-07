@@ -7,17 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.now.network.response.ResponseFollowerDto
 import com.sopt.now.network.service.ServicePool
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class FollowerViewModel : ViewModel() {
+@HiltViewModel
+class FollowerViewModel  @Inject constructor(
+    private val servicePool: ServicePool
+) : ViewModel() {
     private val _followers = MutableLiveData<List<ResponseFollowerDto.Data>>()
     val followers: LiveData<List<ResponseFollowerDto.Data>> get() = _followers
 
     fun loadFollowers() {
         viewModelScope.launch {
             runCatching {
-                ServicePool.followerService.getFollowers(2)
+                servicePool.followerService.getFollowers(2)
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {t ->
