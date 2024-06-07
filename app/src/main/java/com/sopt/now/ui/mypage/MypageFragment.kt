@@ -8,21 +8,20 @@ import androidx.navigation.fragment.findNavController
 import com.sopt.now.R
 import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentMypageBinding
-import com.sopt.now.util.viewModelFactory
 
-class MypageFragment : BaseFragment<FragmentMypageBinding> (
+class MypageFragment : BaseFragment<FragmentMypageBinding>(
     FragmentMypageBinding::inflate
 ) {
 
     private val mypageViewModel: MypageViewModel by viewModels {
         val app = requireActivity().application as SoptApp
-        viewModelFactory { MypageViewModel(app.appContainer.userRepository) }
+        app.serviceLocator.appViewModelFactory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mypageViewModel.info()
+        mypageViewModel.userInfo()
         setupObservers()
         initLogoutBtnClickListener()
         initChPasswordBtnClickListener()

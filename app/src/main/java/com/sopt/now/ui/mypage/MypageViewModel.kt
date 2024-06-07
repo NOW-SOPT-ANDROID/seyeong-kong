@@ -6,20 +6,21 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.now.data.UserRepository
 import com.sopt.now.network.response.ResponseInfoDto
 import com.sopt.now.network.response.UserInfo
-import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MypageViewModel(private val userRepository: UserRepository) : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
+class MypageViewModel(
+    private val userRepository: UserRepository,
+) :
+    ViewModel() {
     private val userInfoStatus = MutableLiveData<AuthState>()
     val userLiveData = MutableLiveData<UserInfo?>()
 
-    fun info() {
+    fun userInfo() {
         viewModelScope.launch {
             runCatching {
-                authService.info()
+                userRepository.getUserInfo()
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {
