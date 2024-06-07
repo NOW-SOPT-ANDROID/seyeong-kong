@@ -1,24 +1,22 @@
 package com.sopt.now.ui.signup
 
-import BaseFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentSignupBinding
 import com.sopt.now.network.request.RequestSignUpDto
+import com.sopt.now.util.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignupFragment : BaseFragment<FragmentSignupBinding>(
     FragmentSignupBinding::inflate
 ) {
 
-    private val signupViewModel: SignupViewModel by viewModels {
-        val app = requireActivity().application as SoptApp
-        app.serviceLocator.appViewModelFactory
-    }
+    private val signupViewModel: SignupViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSignupBtnClickListener()
