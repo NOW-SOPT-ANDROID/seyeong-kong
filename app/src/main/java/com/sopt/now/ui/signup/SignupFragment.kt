@@ -10,7 +10,6 @@ import com.sopt.now.R
 import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentSignupBinding
 import com.sopt.now.network.request.RequestSignUpDto
-import com.sopt.now.util.viewModelFactory
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>(
     FragmentSignupBinding::inflate
@@ -18,7 +17,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(
 
     private val signupViewModel: SignupViewModel by viewModels {
         val app = requireActivity().application as SoptApp
-        viewModelFactory { SignupViewModel(app.appContainer.userRepository) }
+        app.serviceLocator.appViewModelFactory
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
