@@ -8,12 +8,22 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.SoptApp
+import com.sopt.now.data.UserRepository
 import com.sopt.now.databinding.ActivityMainBinding
+import com.sopt.now.network.ApiFactory
 import com.sopt.now.ui.home.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var userRepository: UserRepository
+
+    @Inject
+    lateinit var apiFactory: ApiFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         binding.mainBnv.setupWithNavController(navController)
         hideBottomNavigationView(navController)
 
-        val userRepository = (application as SoptApp).serviceLocator.userRepository
         if (userRepository.isUserLoggedIn()) {
             navController.navigate(R.id.homeFragment)
         } else {
