@@ -1,9 +1,10 @@
 package com.sopt.now.compose.network.service
 
-import com.sopt.now.compose.network.ApiFactory
-import com.sopt.now.compose.network.FollowerApiFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object ServicePool {
-    val authService = ApiFactory.create<AuthService>()
-    val followerService = FollowerApiFactory.create<FollowerService>()
-}
+@Singleton
+class ServicePool @Inject constructor(
+    val authService: AuthService,
+    val followerService: FollowerService
+)
