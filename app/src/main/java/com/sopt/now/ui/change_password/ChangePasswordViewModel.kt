@@ -7,10 +7,13 @@ import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestChangePasswordDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.ui.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class ChangePasswordViewModel(
+@HiltViewModel
+class ChangePasswordViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
     val changePasswordStatus = MutableLiveData<AuthState>()
