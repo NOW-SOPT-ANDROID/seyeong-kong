@@ -10,9 +10,14 @@ import com.sopt.now.R
 import com.sopt.now.data.Profile
 import com.sopt.now.data.friend.Friend
 import com.sopt.now.data.friend.FriendsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(private val friendsRepository: FriendsRepository) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val friendsRepository: FriendsRepository
+) : ViewModel() {
     val friends: LiveData<List<Friend>> = friendsRepository.getAllFriends().asLiveData()
 
     fun addFriend(friend: Friend) {
