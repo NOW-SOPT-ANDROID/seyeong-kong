@@ -1,6 +1,5 @@
 package com.sopt.now.ui.login
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,10 +7,13 @@ import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestLoginDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.ui.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
     val loginStatus = MutableLiveData<AuthState>()

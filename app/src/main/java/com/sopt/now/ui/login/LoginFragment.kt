@@ -1,23 +1,21 @@
 package com.sopt.now.ui.login
 
-import BaseFragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sopt.now.R
-import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentLoginBinding
 import com.sopt.now.network.request.RequestLoginDto
+import com.sopt.now.util.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(
     FragmentLoginBinding::inflate
 ) {
-    private val loginViewModel: LoginViewModel by viewModels {
-        val app = requireActivity().application as SoptApp
-        app.serviceLocator.appViewModelFactory
-    }
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
