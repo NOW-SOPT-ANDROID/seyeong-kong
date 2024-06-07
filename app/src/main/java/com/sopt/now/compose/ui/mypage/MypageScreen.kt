@@ -26,10 +26,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
+import com.sopt.now.compose.SoptApp
+import com.sopt.now.compose.util.AppViewModelFactory
 
 @Composable
 fun MypageScreen(navController: NavController) {
-    val viewModel: MypageViewModel = viewModel()
+    val viewModel: MypageViewModel = viewModel(
+        factory = AppViewModelFactory(SoptApp.serviceLocatorInstance.userRepository)
+    )
     val authState by viewModel.userInfoStatus.observeAsState()
     val userState by viewModel.userLiveData.observeAsState()
     val successLogout by viewModel.successLogout.observeAsState()
