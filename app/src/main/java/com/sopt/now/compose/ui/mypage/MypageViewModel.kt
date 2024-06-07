@@ -9,10 +9,13 @@ import com.sopt.now.compose.network.reponse.ResponseInfoDto
 import com.sopt.now.compose.network.reponse.UserInfo
 import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.ui.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MypageViewModel(
+@HiltViewModel
+class MypageViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel(){
     private val _userInfoStatus = MutableLiveData<AuthState>()
