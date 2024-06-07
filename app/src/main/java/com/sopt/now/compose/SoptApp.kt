@@ -2,19 +2,25 @@ package com.sopt.now.compose
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
-import com.sopt.now.compose.data.UserRepository
 
-class SoptApp: Application() {
-    override fun onCreate() {
-        super.onCreate()
-        preferenceInstance = getSharedPreferences("SaveLogin", Context.MODE_PRIVATE)
-        userRepository = UserRepository(preferenceInstance)
-    }
+class SoptApp : Application() {
+    lateinit var serviceLocator: ServiceLocator
 
     companion object {
-        lateinit var preferenceInstance: SharedPreferences
-        lateinit var userRepository: UserRepository
+        @Volatile
+        private lateinit var instance: SoptApp
+
+        val serviceLocatorInstance: ServiceLocator
+            get() = instance.serviceLocator
+
+        fun applicationContext(): Context {
+            return instance.applicationContext
+        }
     }
-    //고칠께욥ㅎㅎ
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+        serviceLocator = ServiceLocator(applicationContext)
+    }
 }
