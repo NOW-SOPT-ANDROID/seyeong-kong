@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sopt.now.data.UserRepository
 import com.sopt.now.data.friend.FriendsRepository
+import com.sopt.now.ui.change_password.ChangePasswordViewModel
 import com.sopt.now.ui.home.HomeViewModel
 import com.sopt.now.ui.login.LoginViewModel
 import com.sopt.now.ui.mypage.MypageViewModel
@@ -25,6 +26,9 @@ class AppViewModelFactory(
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(userRepository) as T
+            }
+            modelClass.isAssignableFrom(ChangePasswordViewModel::class.java) -> {
+                ChangePasswordViewModel(userRepository) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(friendsRepository) as T

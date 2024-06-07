@@ -12,8 +12,7 @@ import retrofit2.Response
 
 class MypageViewModel(
     private val userRepository: UserRepository,
-) :
-    ViewModel() {
+) : ViewModel() {
     private val userInfoStatus = MutableLiveData<AuthState>()
     val userLiveData = MutableLiveData<UserInfo?>()
 
