@@ -35,13 +35,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
+import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestSignUpDto
+import com.sopt.now.compose.util.AppViewModelFactory
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun SignupScreen(navController: NavController) {
+    val viewModel: SignupViewModel = viewModel(
+        factory = AppViewModelFactory(SoptApp.serviceLocatorInstance.userRepository)
+    )
     val snackbarHostState = remember { SnackbarHostState() }
-    val viewModel: SignupViewModel = viewModel()
 
     var userId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
