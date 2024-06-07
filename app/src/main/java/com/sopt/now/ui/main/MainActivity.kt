@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainBnv.setupWithNavController(navController)
         hideBottomNavigationView(navController)
 
-        val userRepository = (application as SoptApp).appContainer.userRepository
+        val userRepository = (application as SoptApp).serviceLocator.userRepository
         if (userRepository.isUserLoggedIn()) {
             navController.navigate(R.id.homeFragment)
         } else {

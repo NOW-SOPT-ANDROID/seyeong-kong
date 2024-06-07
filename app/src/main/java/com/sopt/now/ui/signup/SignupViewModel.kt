@@ -7,19 +7,19 @@ import com.sopt.now.data.User
 import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto
-import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class SignupViewModel(private val userRepository: UserRepository) : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
+class SignupViewModel(
+    private val userRepository: UserRepository,
+) : ViewModel() {
     val signupStatus = MutableLiveData<AuthState>()
 
     fun signUp(request: RequestSignUpDto) {
         viewModelScope.launch {
             runCatching {
-                authService.signUp(request)
+                userRepository.signUp(request)
             }.onSuccess { response ->
                 handleSuccess(response, request)
             }.onFailure {

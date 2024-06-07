@@ -18,7 +18,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(
 ) {
     private val viewModel: HomeViewModel by viewModels {
         val app = requireActivity().application as SoptApp
-        HomeViewModelFactory(app.appContainer.provideFriendsRepository())
+        HomeViewModelFactory(app.serviceLocator.friendsRepository)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

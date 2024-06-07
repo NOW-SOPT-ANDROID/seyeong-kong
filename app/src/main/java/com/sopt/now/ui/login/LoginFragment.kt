@@ -10,14 +10,13 @@ import com.sopt.now.R
 import com.sopt.now.SoptApp
 import com.sopt.now.databinding.FragmentLoginBinding
 import com.sopt.now.network.request.RequestLoginDto
-import com.sopt.now.util.viewModelFactory
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(
     FragmentLoginBinding::inflate
 ) {
     private val loginViewModel: LoginViewModel by viewModels {
         val app = requireActivity().application as SoptApp
-        viewModelFactory { LoginViewModel(app.appContainer.userRepository) }
+        app.serviceLocator.appViewModelFactory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -11,7 +11,7 @@ class HeaderInterceptor(private val context: Context) :
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val app = context.applicationContext as SoptApp
-        val memberId = app.appContainer.userRepository.getMemberId() ?: "default_member_id"
+        val memberId = app.serviceLocator.userRepository.getMemberId() ?: "default_member_id"
         val newRequest = originalRequest.newBuilder()
             .addHeader("memberId", memberId)
             .build()
