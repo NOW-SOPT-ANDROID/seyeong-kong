@@ -3,18 +3,17 @@ package com.sopt.now.compose.ui.changePassword
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.now.compose.SoptApp.Companion.userRepository
+import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.network.request.RequestChangePasswordDto
 import com.sopt.now.compose.ui.AuthState
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
-class ChangePasswordViewModel : ViewModel() {
+class ChangePasswordViewModel(
+    private val userRepository: UserRepository,
+) : ViewModel()  {
     private val authService by lazy { ServicePool.authService }
     val changePasswordStatus = MutableLiveData<AuthState>()
 

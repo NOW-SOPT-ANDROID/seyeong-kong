@@ -34,13 +34,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
+import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestChangePasswordDto
+import com.sopt.now.compose.util.AppViewModelFactory
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun ChangePasswordScreen(navController: NavController) {
+    val viewModel: ChangePasswordViewModel = viewModel(
+        factory = AppViewModelFactory(SoptApp.serviceLocatorInstance.userRepository)
+    )
     val snackbarHostState = remember { SnackbarHostState() }
-    val viewModel:ChangePasswordViewModel = viewModel()
 
     var prePassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
