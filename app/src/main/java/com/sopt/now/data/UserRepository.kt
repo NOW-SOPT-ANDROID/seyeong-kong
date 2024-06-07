@@ -1,57 +1,57 @@
 package com.sopt.now.data
 
-import android.content.SharedPreferences
-import androidx.core.content.edit
+import com.sopt.now.network.request.RequestChangePasswordDto
+import com.sopt.now.network.request.RequestLoginDto
+import com.sopt.now.network.request.RequestSignUpDto
+import com.sopt.now.network.response.ResponseDto
+import com.sopt.now.network.response.ResponseInfoDto
+import retrofit2.Response
 
-class UserRepository(private val preferences: SharedPreferences) {
+class UserRepository(
+    private val localDataSource: UserLocalDataSource,
+    private val remoteDataSource: UserRemoteDataSource
+) {
     fun setUserLoggedIn(loggedIn: Boolean) {
-        preferences.edit().putBoolean("isLoggedIn", loggedIn).commit()
+        localDataSource.setUserLoggedIn(loggedIn)
     }
 
     fun isUserLoggedIn(): Boolean {
-        return preferences.getBoolean("isLoggedIn", false)
+        return localDataSource.isUserLoggedIn()
     }
 
     fun logoutUser() {
-        preferences.edit().clear().apply()
-    }
-
-    fun getUserData(): User? {
-        val userId = preferences.getString(KEY_USER_ID, null) ?: return null
-        val password = preferences.getString(KEY_USER_PW, null) ?: return null
-        val nickname = preferences.getString(KEY_NICKNAME, null) ?: return null
-        val phone = preferences.getString(KEY_PHONE, null) ?: return null
-        return User(userId, password, nickname, phone)
+        localDataSource.logoutUser()
     }
 
     fun saveUserData(user: User) {
-        preferences.edit {
-            putString(KEY_USER_ID, user.id)
-            putString(KEY_USER_PW, user.password)
-            putString(KEY_NICKNAME, user.nickname)
-            putString(KEY_PHONE, user.phone)
-        }
+        localDataSource.saveUserData(user)
     }
 
-
     fun updateUserPassword(newPassword: String) {
-        preferences.edit().putString(KEY_USER_PW, newPassword).apply()
+        localDataSource.updateUserPassword(newPassword)
     }
 
     fun setMemberId(memberId: String) {
-        preferences.edit().putString(KEY_MEMBER_ID, memberId).apply()
+        localDataSource.setMemberId(memberId)
     }
 
     fun getMemberId(): String? {
-        return preferences.getString(KEY_MEMBER_ID, null)
+        return localDataSource.getMemberId()
     }
 
+    suspend fun signUp(request: RequestSignUpDto): Response<ResponseDto> {
+        return remoteDataSource.signUp(request)
+    }
 
-    companion object {
-        private const val KEY_USER_ID = "UserID"
-        private const val KEY_USER_PW = "Password"
-        private const val  KEY_NICKNAME = "Nickname"
-        private const val KEY_PHONE = "Phone"
-        private const val KEY_MEMBER_ID = "MemberID"
+    suspend fun login(request: RequestLoginDto): Response<ResponseDto> {
+        return remoteDataSource.login(request)
+    }
+
+    suspend fun getUserInfo(): Response<ResponseInfoDto> {
+        return remoteDataSource.getUserInfo()
+    }
+
+    suspend fun changePassword(request: RequestChangePasswordDto): Response<ResponseDto> {
+        return remoteDataSource.changePassword(request)
     }
 }
