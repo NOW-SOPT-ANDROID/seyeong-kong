@@ -7,10 +7,13 @@ import com.sopt.now.data.UserRepository
 import com.sopt.now.network.response.ResponseInfoDto
 import com.sopt.now.network.response.UserInfo
 import com.sopt.now.ui.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MypageViewModel(
+@HiltViewModel
+class MypageViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) :
     ViewModel() {
