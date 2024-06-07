@@ -2,14 +2,14 @@ package com.sopt.now.ui.signup
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sopt.now.data.User
 import com.sopt.now.data.UserRepository
 import com.sopt.now.network.request.RequestSignUpDto
 import com.sopt.now.network.response.ResponseDto
 import com.sopt.now.network.service.ServicePool
 import com.sopt.now.ui.AuthState
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class SignupViewModel(private val userRepository: UserRepository) : ViewModel() {
@@ -17,25 +17,26 @@ class SignupViewModel(private val userRepository: UserRepository) : ViewModel() 
     val signupStatus = MutableLiveData<AuthState>()
 
     fun signUp(request: RequestSignUpDto) {
-        authService.signUp(request).enqueue(object : Callback<ResponseDto> {
-            override fun onResponse(
-                call: Call<ResponseDto>,
-                response: Response<ResponseDto>,
-            ) {
-                if (response.isSuccessful) {
-                    successResponse(response, request)
-                } else {
-                    failResponse(response)
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
+        viewModelScope.launch {
+            runCatching {
+                authService.signUp(request)
+            }.onSuccess { response ->
+                handleSuccess(response, request)
+            }.onFailure {
                 signupStatus.value = AuthState(
                     isSuccess = false,
                     message = "서버 에러"
                 )
             }
-        })
+        }
+    }
+
+    private fun handleSuccess(response: Response<ResponseDto>, request: RequestSignUpDto) {
+        if (response.isSuccessful) {
+            successResponse(response, request)
+        } else {
+            failResponse(response)
+        }
     }
 
     private fun successResponse(response: Response<ResponseDto>, request: RequestSignUpDto) {
