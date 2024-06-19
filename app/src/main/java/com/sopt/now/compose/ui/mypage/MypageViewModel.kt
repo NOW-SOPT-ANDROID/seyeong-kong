@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.now.compose.SoptApp.Companion.userRepository
+import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.reponse.ResponseInfoDto
 import com.sopt.now.compose.network.reponse.UserInfo
 import com.sopt.now.compose.network.service.ServicePool
@@ -12,9 +12,9 @@ import com.sopt.now.compose.ui.AuthState
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MypageViewModel : ViewModel() {
-    private val authService by lazy { ServicePool.authService }
-
+class MypageViewModel(
+    private val userRepository: UserRepository,
+) : ViewModel(){
     private val _userInfoStatus = MutableLiveData<AuthState>()
     private val _userLiveData = MutableLiveData<UserInfo>()
     private val _successLogout = MutableLiveData<Boolean?>(null)
@@ -26,7 +26,7 @@ class MypageViewModel : ViewModel() {
     fun fetchUserInfo() {
         viewModelScope.launch {
             runCatching {
-                authService.userInfo()
+                userRepository.getUserInfo()
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {
