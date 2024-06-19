@@ -30,7 +30,7 @@ import com.sopt.now.compose.R
 @Composable
 fun MypageScreen(navController: NavController) {
     val viewModel: MypageViewModel = viewModel()
-    val authState by viewModel.mypageStatus.observeAsState()
+    val authState by viewModel.userInfoStatus.observeAsState()
     val userState by viewModel.userLiveData.observeAsState()
     val successLogout by viewModel.successLogout.observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -45,7 +45,7 @@ fun MypageScreen(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        viewModel.userInfo()
+        viewModel.fetchUserInfo()
     }
 
     LaunchedEffect(successLogout) {
