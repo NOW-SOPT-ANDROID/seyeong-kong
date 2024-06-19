@@ -1,16 +1,17 @@
 package com.sopt.now.compose.network
 
-import android.content.Context
-import com.sopt.now.compose.SoptApp
+import android.content.SharedPreferences
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class HeaderInterceptor(private val context: Context) :
+class HeaderInterceptor @Inject constructor(
+    private val sharedPreferences: SharedPreferences
+) :
     Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val app = context.applicationContext as SoptApp
-        val memberId = app.serviceLocator.userRepository.getMemberId() ?: "default_member_id"
+        val memberId = sharedPreferences.getString("MemberID", "default_member_id") ?: "default_member_id"
         val newRequest = originalRequest.newBuilder()
             .addHeader("memberId", memberId)
             .build()

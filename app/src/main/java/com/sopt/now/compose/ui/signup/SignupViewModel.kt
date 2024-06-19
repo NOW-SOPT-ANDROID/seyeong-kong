@@ -9,10 +9,13 @@ import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.network.reponse.ResponseDto
 import com.sopt.now.compose.ui.AuthState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class SignupViewModel(
+@HiltViewModel
+class SignupViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _signupStatus = MutableLiveData<AuthState>()

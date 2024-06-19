@@ -19,11 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sopt.now.compose.data.UserRepository
 import com.sopt.now.compose.ui.navigation.BottomNavigationItem
 import com.sopt.now.compose.ui.navigation.BottomNavigationBar
 import com.sopt.now.compose.ui.navigation.NavGraph
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var userRepository: UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,7 +38,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             MainContent(
-                navController
+                navController, userRepository
             )
         }
     }
@@ -39,7 +46,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainContent(
-    navController: NavHostController
+    navController: NavHostController,
+    userRepository: UserRepository,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -62,7 +70,8 @@ fun MainContent(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavGraph(
-                navController = navController
+                navController = navController,
+                userRepository = userRepository
             )
         }
     }

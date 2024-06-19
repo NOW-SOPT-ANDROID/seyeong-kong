@@ -34,22 +34,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestLoginDto
-import com.sopt.now.compose.util.AppViewModelFactory
 import com.sopt.now.compose.util.noRippleClickable
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    val viewModel: LoginViewModel = viewModel(
-        factory = AppViewModelFactory(SoptApp.serviceLocatorInstance.userRepository)
-    )
+    val viewModel: LoginViewModel = hiltViewModel()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     var inputId by remember { mutableStateOf("") }
     var inputPw by remember { mutableStateOf("") }
-    val snackbarHostState = remember { SnackbarHostState() }
+
     val authState by viewModel.loginStatus.observeAsState()
 
     LaunchedEffect(authState) {
