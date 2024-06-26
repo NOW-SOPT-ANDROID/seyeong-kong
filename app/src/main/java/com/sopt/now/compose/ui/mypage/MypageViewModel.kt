@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.now.compose.data.UserRepository
+import com.sopt.now.compose.domain.repository.AuthRepository
 import com.sopt.now.compose.network.reponse.ResponseInfoDto
 import com.sopt.now.compose.network.reponse.UserInfo
-import com.sopt.now.compose.network.service.ServicePool
 import com.sopt.now.compose.ui.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MypageViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel(){
     private val _userInfoStatus = MutableLiveData<AuthState>()
     private val _userLiveData = MutableLiveData<UserInfo>()
@@ -29,7 +28,7 @@ class MypageViewModel @Inject constructor(
     fun fetchUserInfo() {
         viewModelScope.launch {
             runCatching {
-                userRepository.getUserInfo()
+                authRepository.getId()
             }.onSuccess { response ->
                 handleSuccess(response)
             }.onFailure {
@@ -42,7 +41,7 @@ class MypageViewModel @Inject constructor(
         }
     }
 
-    private fun handleSuccess(response: Response<ResponseInfoDto>) {
+    private fun handleSuccess(response: String) {
         if (response.isSuccessful) {
             successResponse(response)
         } else {
@@ -64,7 +63,7 @@ class MypageViewModel @Inject constructor(
     }
 
     fun logout() {
-        userRepository.logoutUser()
+        authRepository.clearInfo()
         _successLogout.postValue(true)
     }
 }

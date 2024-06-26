@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.network.service.ServicePool
-import com.sopt.now.compose.network.reponse.ResponseDto
+import com.sopt.now.compose.data.remote.response.BaseResponseWithoutDataDto
+import com.sopt.now.compose.domain.entity.RequestSignInEntity
+import com.sopt.now.compose.domain.repository.AuthRepository
 import com.sopt.now.compose.network.request.RequestLoginDto
 import com.sopt.now.compose.ui.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _loginStatus = MutableLiveData<AuthState>()
     val loginStatus: LiveData<AuthState> = _loginStatus
@@ -24,9 +24,16 @@ class LoginViewModel @Inject constructor(
     fun login(request: RequestLoginDto) {
         viewModelScope.launch {
             runCatching {
-                userRepository.login(request)
-            }.onSuccess { response ->
-                handleSuccess(response)
+                authRepository.verifyUser(
+                    RequestSignInEntity(
+                        authenticationId = request.authenticationId,
+                        password = request.password
+                    )
+                )
+            }.onSuccess { result ->
+                result.onSuccess { response ->
+                    handleSuccess(response)
+                }
             }.onFailure {
                 _loginStatus.value = AuthState(
                     isSuccess = false,
@@ -36,26 +43,22 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun handleSuccess(response: Response<ResponseDto>) {
+    private fun handleSuccess(response: Response<BaseResponseWithoutDataDto>) {
         if (response.isSuccessful) {
-            successResponse(response)
+            val memberId = response.headers()["location"] ?: "unknown"
+            authRepository.setUserLoggedIn(true)
+            authRepository.setUserId(memberId)
+
+            _loginStatus.value = AuthState(
+                isSuccess = true,
+                message = "로그인 성공 유저의 ID는 $memberId 입니다."
+            )
         } else {
             failResponse(response)
         }
     }
 
-    private fun successResponse(response: Response<ResponseDto>) {
-        val memberId = response.headers()["location"] ?: "unknown"
-        userRepository.setUserLoggedIn(true)
-        userRepository.setMemberId(memberId)
-
-        _loginStatus.value = AuthState(
-            isSuccess = true,
-            message = "로그인 성공 유저의 ID는 $memberId 입니다."
-        )
-    }
-
-    private fun failResponse(response: Response<ResponseDto>) {
+    private fun failResponse(response: Response<BaseResponseWithoutDataDto>) {
         val error = response.message()
         _loginStatus.value = AuthState(
             isSuccess = false,
