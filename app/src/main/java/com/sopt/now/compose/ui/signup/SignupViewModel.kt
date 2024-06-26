@@ -7,10 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.now.compose.data.remote.response.BaseResponseWithoutDataDto
 import com.sopt.now.compose.domain.entity.RequestUserEntity
 import com.sopt.now.compose.domain.repository.AuthRepository
-import com.sopt.now.compose.model.User
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.ui.AuthState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -21,6 +22,9 @@ class SignupViewModel @Inject constructor(
 ) : ViewModel() {
     private val _signupStatus = MutableLiveData<AuthState>()
     val signupStatus: LiveData<AuthState> = _signupStatus
+
+    private val _sideEffect = MutableSharedFlow<SignupSideEffect>()
+    val sideEffect: SharedFlow<SignupSideEffect> = _sideEffect
 
     fun signUp(request: RequestSignUpDto) {
         viewModelScope.launch {
@@ -38,17 +42,11 @@ class SignupViewModel @Inject constructor(
                         handleSuccess(response, request)
                     },
                     onFailure = {
-                        _signupStatus.value = AuthState(
-                            isSuccess = false,
-                            message = "서버 에러"
-                        )
+                        _sideEffect.emit(SignupSideEffect.ShowError("서버 에러"))
                     }
                 )
             }.onFailure {
-                _signupStatus.value = AuthState(
-                    isSuccess = false,
-                    message = "서버 에러"
-                )
+                _sideEffect.emit(SignupSideEffect.ShowError("서버 에러"))
             }
         }
     }
@@ -63,7 +61,6 @@ class SignupViewModel @Inject constructor(
 
     private fun successResponse(response: Response<BaseResponseWithoutDataDto>, request: RequestSignUpDto) {
         val memberId = response.headers()["location"] ?: "unknown"
-        val user = User(request.authenticationId, request.password, request.nickname, request.phone)
         authRepository.setUserId(memberId)
         authRepository.setId(request.authenticationId)
         authRepository.setPassword(request.password)
@@ -73,6 +70,9 @@ class SignupViewModel @Inject constructor(
             isSuccess = true,
             message = "회원가입 성공 유저의 ID는 $memberId 입니다."
         )
+        viewModelScope.launch {
+            _sideEffect.emit(SignupSideEffect.NavigateToMain)
+        }
     }
 
     private fun failResponse(response: Response<BaseResponseWithoutDataDto>) {
@@ -81,5 +81,10 @@ class SignupViewModel @Inject constructor(
             isSuccess = false,
             message = "회원가입 실패 $error"
         )
+    }
+
+    sealed class SignupSideEffect {
+        data class ShowError(val message: String) : SignupSideEffect()
+        data object NavigateToMain : SignupSideEffect()
     }
 }

@@ -33,12 +33,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.SoptApp
 import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.util.noRippleClickable
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignupScreen(navController: NavController) {
@@ -54,13 +53,28 @@ fun SignupScreen(navController: NavController) {
 
     LaunchedEffect(authState) {
         authState?.let { state ->
-            snackbarHostState.showSnackbar(
-                message = state.message,
-                duration = SnackbarDuration.Short
-            )
-            if (state.isSuccess) {
-                navController.navigate("login") {
-                    popUpTo("signup") { inclusive = true }
+            if (state.message.isNotEmpty()) {
+                snackbarHostState.showSnackbar(
+                    message = state.message,
+                    duration = SnackbarDuration.Short
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collectLatest { sideEffect ->
+            when (sideEffect) {
+                is SignupViewModel.SignupSideEffect.ShowError -> {
+                    snackbarHostState.showSnackbar(
+                        message = sideEffect.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                SignupViewModel.SignupSideEffect.NavigateToMain -> {
+                    navController.navigate("login") {
+                        popUpTo("signup") { inclusive = true }
+                    }
                 }
             }
         }
