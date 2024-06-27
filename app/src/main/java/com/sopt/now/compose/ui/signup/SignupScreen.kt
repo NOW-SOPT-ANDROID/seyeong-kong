@@ -19,11 +19,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,21 +34,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
-import com.sopt.now.compose.network.request.RequestSignUpDto
 import com.sopt.now.compose.util.noRippleClickable
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SignupScreen(navController: NavController) {
-    val viewModel: SignupViewModel = hiltViewModel()
+fun SignupRoute(navController: NavController, viewModel: SignupViewModel = hiltViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
-
-    var userId by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var nickname by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-
-    val authState by viewModel.signupStatus.observeAsState()
+    val signUpState by viewModel.signUpState.collectAsState()
+    val authState by viewModel.signupStatus.observeAsState(null)
 
     LaunchedEffect(authState) {
         authState?.let { state ->
@@ -71,6 +63,7 @@ fun SignupScreen(navController: NavController) {
                         duration = SnackbarDuration.Short
                     )
                 }
+
                 SignupViewModel.SignupSideEffect.NavigateToMain -> {
                     navController.navigate("login") {
                         popUpTo("signup") { inclusive = true }
@@ -79,6 +72,28 @@ fun SignupScreen(navController: NavController) {
             }
         }
     }
+
+    SignupScreen(
+        signUpState = signUpState,
+        onIdChange = { viewModel.updateSignUpState(id = it) },
+        onPasswordChange = { viewModel.updateSignUpState(password = it) },
+        onNicknameChange = { viewModel.updateSignUpState(nickname = it) },
+        onPhoneChange = { viewModel.updateSignUpState(phone = it) },
+        onSignUpClick = { viewModel.signUp() },
+        snackbarHostState = snackbarHostState
+    )
+}
+
+@Composable
+fun SignupScreen(
+    signUpState: SignUpState,
+    onIdChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
+    onSignUpClick: () -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -99,8 +114,8 @@ fun SignupScreen(navController: NavController) {
 
             Spacer(Modifier.height(20.dp))
             OutlinedTextField(
-                value = userId,
-                onValueChange = { userId = it },
+                value = signUpState.id,
+                onValueChange = onIdChange,
                 label = { Text(stringResource(R.string.id)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -109,8 +124,8 @@ fun SignupScreen(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = signUpState.password,
+                onValueChange = onPasswordChange,
                 label = { Text(stringResource(R.string.pw)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -123,8 +138,8 @@ fun SignupScreen(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = nickname,
-                onValueChange = { nickname = it },
+                value = signUpState.nickname,
+                onValueChange = onNicknameChange,
                 label = { Text(stringResource(R.string.nickname)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -133,8 +148,8 @@ fun SignupScreen(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = phone,
-                onValueChange = { phone = it.uppercase() },
+                value = signUpState.phone,
+                onValueChange = onPhoneChange,
                 label = { Text(stringResource(R.string.phone)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -144,9 +159,7 @@ fun SignupScreen(navController: NavController) {
             Spacer(modifier = Modifier.weight(1f))
             CustomBtn(
                 text = stringResource(R.string.signup_kr),
-                onClick = {
-                    viewModel.signUp(RequestSignUpDto(userId, password, nickname, phone))
-                },
+                onClick = onSignUpClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
