@@ -1,9 +1,9 @@
 package com.sopt.now.compose.data.remote.service
 
 import com.sopt.now.compose.data.remote.response.BaseResponseWithoutDataDto
-import com.sopt.now.compose.domain.entity.RequestChangePasswordEntity
-import com.sopt.now.compose.domain.entity.RequestSignInEntity
-import com.sopt.now.compose.domain.entity.RequestUserEntity
+import com.sopt.now.compose.domain.entity.request.RequestChangePasswordEntity
+import com.sopt.now.compose.domain.entity.request.RequestSignInEntity
+import com.sopt.now.compose.domain.entity.request.RequestUserEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.PATCH

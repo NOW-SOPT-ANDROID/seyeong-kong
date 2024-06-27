@@ -3,9 +3,9 @@ package com.sopt.now.compose.data.remote.repositoryImpl
 import com.sopt.now.compose.data.local.UserDataStore
 import com.sopt.now.compose.data.remote.datasource.AuthDataSource
 import com.sopt.now.compose.data.remote.response.BaseResponseWithoutDataDto
-import com.sopt.now.compose.domain.entity.RequestChangePasswordEntity
-import com.sopt.now.compose.domain.entity.RequestSignInEntity
-import com.sopt.now.compose.domain.entity.RequestUserEntity
+import com.sopt.now.compose.domain.entity.request.RequestChangePasswordEntity
+import com.sopt.now.compose.domain.entity.request.RequestSignInEntity
+import com.sopt.now.compose.domain.entity.request.RequestUserEntity
 import com.sopt.now.compose.domain.repository.AuthRepository
 import retrofit2.Response
 import javax.inject.Inject

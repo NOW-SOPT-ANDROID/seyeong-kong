@@ -1,14 +1,12 @@
-package com.sopt.now.compose.domain.entity
+package com.sopt.now.compose.domain.entity.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestUserEntity(
+data class ResponseUserInfo(
     @SerialName("authenticationId")
     val authenticationId: String,
-    @SerialName("password")
-    val password: String,
     @SerialName("nickname")
     val nickname: String,
     @SerialName("phone")
