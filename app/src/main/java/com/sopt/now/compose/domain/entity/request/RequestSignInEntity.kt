@@ -1,10 +1,10 @@
-package com.sopt.now.compose.network.request
+package com.sopt.now.compose.domain.entity.request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestLoginDto(
+data class RequestSignInEntity(
     @SerialName("authenticationId")
     val authenticationId: String,
     @SerialName("password")

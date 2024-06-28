@@ -1,7 +1,9 @@
 package com.sopt.now.compose.di
 
-import com.sopt.now.compose.data.UserRepository
-import com.sopt.now.compose.data.UserRepositoryImpl
+import com.sopt.now.compose.data.remote.repositoryImpl.AuthRepositoryImpl
+import com.sopt.now.compose.data.remote.repositoryImpl.MypageRepositoryImpl
+import com.sopt.now.compose.domain.repository.AuthRepository
+import com.sopt.now.compose.domain.repository.MypageRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,7 +16,9 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindUserRepository(
-        impl: UserRepositoryImpl
-    ): UserRepository
+    abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMypageRepository(mypageRepository: MypageRepositoryImpl): MypageRepository
 }
