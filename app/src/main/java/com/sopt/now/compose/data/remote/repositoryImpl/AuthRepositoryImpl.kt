@@ -2,32 +2,44 @@ package com.sopt.now.compose.data.remote.repositoryImpl
 
 import com.sopt.now.compose.data.local.UserDataStore
 import com.sopt.now.compose.data.remote.datasource.AuthDataSource
-import com.sopt.now.compose.data.remote.response.BaseResponseWithoutDataDto
 import com.sopt.now.compose.domain.entity.request.RequestChangePasswordEntity
 import com.sopt.now.compose.domain.entity.request.RequestSignInEntity
 import com.sopt.now.compose.domain.entity.request.RequestUserEntity
 import com.sopt.now.compose.domain.repository.AuthRepository
-import retrofit2.Response
+import com.sopt.now.compose.domain.entity.Result
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val userDataStore: UserDataStore
 ) : AuthRepository {
-    override suspend fun signup(user: RequestUserEntity): Result<Response<BaseResponseWithoutDataDto>> =
-        runCatching {
+    override suspend fun signup(user: RequestUserEntity): Result<Unit> {
+        return runCatching {
             authDataSource.postSignUp(user)
-        }
+        }.fold(
+            onSuccess = { Result.Success(Unit) },
+            onFailure = { Result.Error(it) }
+        )
+    }
 
-    override suspend fun login(user: RequestSignInEntity): Result<Response<BaseResponseWithoutDataDto>> =
-        runCatching {
+    override suspend fun login(user: RequestSignInEntity): Result<Unit> {
+        return runCatching {
             authDataSource.postSignIn(user)
-        }
+        }.fold(
+            onSuccess = { Result.Success(Unit) },
+            onFailure = { Result.Error(it) }
+        )
+    }
 
-    override suspend fun changePassword(user: RequestChangePasswordEntity): Result<Response<BaseResponseWithoutDataDto>> =
-        runCatching {
+
+    override suspend fun changePassword(user: RequestChangePasswordEntity): Result<Unit> {
+        return runCatching {
             authDataSource.postChangePassword(user)
-        }
+        }.fold(
+            onSuccess = { Result.Success(Unit) },
+            onFailure = { Result.Error(it) }
+        )
+    }
 
     override fun getId() = userDataStore.id
     override fun getPassword() = userDataStore.password

@@ -98,9 +98,4 @@ class SignupViewModel @Inject constructor(
             message = "회원가입 실패 $error"
         )
     }
-
-    sealed class SignupSideEffect {
-        data class ShowError(val message: String) : SignupSideEffect()
-        data object NavigateToMain : SignupSideEffect()
-    }
 }

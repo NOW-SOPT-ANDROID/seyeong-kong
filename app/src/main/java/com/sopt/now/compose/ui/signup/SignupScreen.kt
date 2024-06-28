@@ -19,7 +19,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.sopt.now.compose.R
 import com.sopt.now.compose.util.noRippleClickable
@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun SignupRoute(navController: NavController, viewModel: SignupViewModel = hiltViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val signUpState by viewModel.signUpState.collectAsState()
+    val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
     val authState by viewModel.signupStatus.observeAsState(null)
 
     LaunchedEffect(authState) {
@@ -57,14 +57,14 @@ fun SignupRoute(navController: NavController, viewModel: SignupViewModel = hiltV
     LaunchedEffect(viewModel.sideEffect) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignupViewModel.SignupSideEffect.ShowError -> {
+                is SignupSideEffect.ShowError -> {
                     snackbarHostState.showSnackbar(
                         message = sideEffect.message,
                         duration = SnackbarDuration.Short
                     )
                 }
 
-                SignupViewModel.SignupSideEffect.NavigateToMain -> {
+                SignupSideEffect.NavigateToMain -> {
                     navController.navigate("login") {
                         popUpTo("signup") { inclusive = true }
                     }
